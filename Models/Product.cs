@@ -15,5 +15,6 @@ namespace SA51_CA_Project_Team10.Models
         public string Description { get; set; }
         [Required]
         public int Price { get; set; }
+        public string ImageLink { get; set; }
     }
 }

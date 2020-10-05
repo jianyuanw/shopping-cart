@@ -11,7 +11,9 @@ namespace SA51_CA_Project_Team10.Models
         public int Id { get; set; }
         [Required, MaxLength(30)]
         public string Username { get; set; }
-        [Required, MaxLength(250)]
+        [Required, MaxLength(100)]
         public string Password { get; set; }
+        [Required, MaxLength(50)]
+        public string Salt { get; set; }
     }
 }
