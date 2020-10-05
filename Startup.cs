@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SA51_CA_Project_Team10.DBs;
 
 namespace SA51_CA_Project_Team10
 {
@@ -23,10 +25,15 @@ namespace SA51_CA_Project_Team10
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddDbContext<DbT10Software>(opt =>
+                opt.UseLazyLoadingProxies().UseSqlServer(
+                    Configuration.GetConnectionString("DbConn")
+                    ));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DbT10Software db)
         {
             if (env.IsDevelopment())
             {
@@ -48,6 +55,9 @@ namespace SA51_CA_Project_Team10
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
         }
     }
 }
