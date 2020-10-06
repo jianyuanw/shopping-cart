@@ -10,7 +10,8 @@ namespace SA51_CA_Project_Team10.Models
     public class UserSession
     {
         public int Id { set; get; }
-        public string Session { set; get; }
+        public string SessionId { set; get; }
+        public virtual Session Session { get; set; }
         public string UserId { set; get; }
         public virtual User User { set; get; }
     }

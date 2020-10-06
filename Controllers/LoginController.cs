@@ -12,5 +12,10 @@ namespace SA51_CA_Project_Team10.Controllers
         {
             return View();
         }
+
+        public IActionResult Authenticate(string username, string password)
+        {
+            return View("Index");
+        }
     }
 }

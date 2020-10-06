@@ -3,5 +3,33 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<form action="/Login/Authenticate" method="post">
+    <table style="border:none">
+        <tr>
+            <td>
+                Username: 
+            </td>
+            <td>
+                <input type="text" class="form-control" id="username" name="username" required placeholder="Enter Username">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Password:
+            </td>
+            <td>
+                <input type="password" class="form-control" id="password" name="password" required placeholder="Enter Password">
+            </td>
+        </tr>
+        <tr>
+            <td>
+
+            </td>
+            <td>
+                <button type="submit" class="btn btn-primary" style="float:right;">Login</button>
+            </td>
+        </tr>
+
+    </table>
+</form>
 
