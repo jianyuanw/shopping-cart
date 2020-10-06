@@ -13,9 +13,9 @@ namespace SA51_CA_Project_Team10.Models
        
         public int Quantity { get; set; }
         
-        public int SessionId { get; set; }
+        public int UserId { get; set; }
 
-        public virtual Session Session { get; set; }
+        public virtual User User { get; set; }
 
         public int ProductId { get; set; }
 

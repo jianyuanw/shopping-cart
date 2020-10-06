@@ -10,6 +10,11 @@ namespace SA51_CA_Project_Team10.Controllers
     {
         public IActionResult Index()
         {
+            ViewData["Message"] = TempData["Message"];
+            if (HttpContext.Request.Cookies["sessionId"] != null)
+            {
+                ViewData["Logged"] = true;
+            }
             return View();
         }
     }

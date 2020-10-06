@@ -18,16 +18,60 @@ namespace SA51_CA_Project_Team10.Controllers
         }
         public IActionResult Index()
         {
+            if (HttpContext.Request.Cookies["sessionId"] != null)
+            {
+                TempData["Message"] = "Already logged in!";
+                return Redirect("/Gallery/Index");
+            }
             return View();
         }
 
-        public string Authenticate(Hasher hasher, string username, string password)
+        [HttpPost]
+        public IActionResult Authenticate(Hasher hasher, string username, string password)
         {
-            /*bool failed = true;
             User user = _db.Users.FirstOrDefault(x => x.Username == username);
-            if (user.)
-            return $"Username: {username}\nPassword: {hasher.GenerateHashString(password)}";*/
-            return "todo";
+            if (user == null || hasher.GenerateHashString(user.Salt + password) != user.Password)
+            {
+                // what to do if wrong
+                ViewData["Message"] = "Username or password incorrect, please try again.";
+                return View("Index");
+                
+            } else {
+                string cart = HttpContext.Request.Cookies["cart"];                
+                if (cart == null)
+                {
+                    string guid = Guid.NewGuid().ToString();
+                    _db.Sessions.Add(new Session
+                    {
+                        Id = guid,
+                        UserId = user.Id,
+                        TimeStamp = DateTime.Now
+                    });
+                    _db.SaveChanges();
+                    Response.Cookies.Append("sessionId", guid);
+                } else {
+                    /* TODO: Cart merging logic here
+                    if (sessionId != userSession.SessionId)
+                    {
+                        List<Cart> accountCart = _db.Carts.Where(cart => cart.SessionId == userSession.SessionId).ToList();
+
+                        List<int> products = _db.Carts.Where(cart => cart.SessionId == userSession.SessionId)
+                                                      .Select(cart => cart.ProductId).ToList();
+
+                        List<Cart> currentCart = _db.Carts.Where(cart => cart.SessionId == sessionId).ToList();
+
+                        foreach (Cart c in currentCart)
+                        {
+                            if (products.Contains(c.ProductId))
+                            {
+                                Cart 
+                            }
+                        }
+                    }*/
+                }
+            }
+            TempData["Message"] = "Successfully logged in!";
+            return Redirect("/Gallery/Index");
         }
     }
 }
