@@ -25,7 +25,8 @@ namespace SA51_CA_Project_Team10.Controllers
                 TempData["Message"] = "Already logged in!";
                 return Redirect("/Gallery/Index");
             }
-            return View();
+
+             return View();
         }
 
         [HttpPost]
@@ -34,10 +35,8 @@ namespace SA51_CA_Project_Team10.Controllers
             User user = _db.Users.FirstOrDefault(x => x.Username == username);
             if (user == null || hasher.GenerateHashString(user.Salt + password) != user.Password)
             {
-                // what to do if wrong
                 ViewData["Message"] = "Username or password incorrect, please try again.";
-                return View("Index");
-                
+                return View("Index");                
             } else {
                 string cart = HttpContext.Request.Cookies["cart"];                
                 if (cart == null)
@@ -73,6 +72,10 @@ namespace SA51_CA_Project_Team10.Controllers
                 }
             }
             TempData["Message"] = "Successfully logged in!";
+            if (TempData["Redirect"] != null) 
+            {
+                return Redirect((string) TempData["Redirect"]);
+            }
             return Redirect("/Gallery/Index");
         }
     }
