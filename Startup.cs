@@ -59,7 +59,7 @@ namespace SA51_CA_Project_Team10
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            db.Database.EnsureDeleted(); // Comment this line away if you don't want to restart the database every time
+            //db.Database.EnsureDeleted(); // Comment this line away if you don't want to restart the database every time
             db.Database.EnsureCreated();
 
             new DbSeeder(db).Seed();
