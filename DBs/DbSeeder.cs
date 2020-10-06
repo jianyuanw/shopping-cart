@@ -69,7 +69,7 @@ namespace SA51_CA_Project_Team10.DBs
                     Name = names[i],
                     Description = descriptions[i],
                     Price = prices[i],
-                    ImageLink = "~/image/software/" + imagelinks[i]
+                    ImageLink = "~/images/software/" + imagelinks[i]
                 });
             }
         }
