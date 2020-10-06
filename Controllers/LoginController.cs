@@ -23,10 +23,11 @@ namespace SA51_CA_Project_Team10.Controllers
 
         public string Authenticate(Hasher hasher, string username, string password)
         {
-            bool failed = true;
+            /*bool failed = true;
             User user = _db.Users.FirstOrDefault(x => x.Username == username);
             if (user.)
-            return $"Username: {username}\nPassword: {hasher.GenerateHashString(password)}";
+            return $"Username: {username}\nPassword: {hasher.GenerateHashString(password)}";*/
+            return "todo";
         }
     }
 }
