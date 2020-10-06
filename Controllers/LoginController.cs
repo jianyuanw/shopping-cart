@@ -18,7 +18,9 @@ namespace SA51_CA_Project_Team10.Controllers
         }
         public IActionResult Index()
         {
-            if (HttpContext.Request.Cookies["sessionId"] != null)
+            string sessionId = HttpContext.Request.Cookies["sessionId"];
+            if (sessionId != null &&
+                _db.Sessions.FirstOrDefault(session => session.Id == sessionId) != null)
             {
                 TempData["Message"] = "Already logged in!";
                 return Redirect("/Gallery/Index");
