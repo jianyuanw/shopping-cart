@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SA51_CA_Project_Team10.DBs;
+using SA51_CA_Project_Team10.Models;
 
 namespace SA51_CA_Project_Team10
 {
@@ -30,6 +31,8 @@ namespace SA51_CA_Project_Team10
                 opt.UseLazyLoadingProxies().UseSqlServer(
                     Configuration.GetConnectionString("DbConn")
                     ));
+
+            services.AddSingleton<Hasher>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

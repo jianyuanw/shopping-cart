@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SA51_CA_Project_Team10.Controllers
 {
-    public class StoreController : Controller
+    public class GalleryController : Controller
     {
         public IActionResult Index()
         {
