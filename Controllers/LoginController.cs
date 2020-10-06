@@ -23,11 +23,24 @@ namespace SA51_CA_Project_Team10.Controllers
 
         public string Authenticate(Hasher hasher, string username, string password)
         {
-            /*bool failed = true;
+            bool failed = true;
             User user = _db.Users.FirstOrDefault(x => x.Username == username);
-            if (user.)
-            return $"Username: {username}\nPassword: {hasher.GenerateHashString(password)}";*/
-            return "todo";
+            if (hasher.GenerateHashString(user.Salt + password) != user.Password)
+            {
+                // what to do if wrong
+                return "Incorrect username or password";
+                
+            } else
+            {
+                /*UserSession userSession = _db.UserSessions.FirstOrDefault(x => x.User.Id == user.Id);
+                string sessionId = HttpContext.Request.Cookies["sessionId"];
+                if (sessionId == null && userSession == null)
+                {
+
+                }*/
+                // what to do if correct
+                return $"{hasher.GenerateHashString(user.Salt + password)}\n{user.Password}\nCorrect";
+            }
         }
     }
 }
