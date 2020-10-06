@@ -33,6 +33,7 @@ namespace SA51_CA_Project_Team10
                     ));
 
             services.AddSingleton<Hasher>();
+            services.AddSingleton<Verify>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,10 +60,10 @@ namespace SA51_CA_Project_Team10
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            db.Database.EnsureDeleted(); // Comment this line away if you don't want to restart the database every time
+            //db.Database.EnsureDeleted(); // Comment this line away if you don't want to restart the database every time
             db.Database.EnsureCreated();
 
-            new DbSeeder(db).Seed();
+            //new DbSeeder(db).Seed();
         }
     }
 }
