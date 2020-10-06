@@ -11,5 +11,7 @@ namespace SA51_CA_Project_Team10.Models
         [Key]
         public string Id { get; set; }
         public DateTime TimeStamp { get; set; }
+        public int UserId { get; set; }
+        public virtual User User { get; set; }
     }
 }

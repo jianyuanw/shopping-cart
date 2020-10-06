@@ -3,6 +3,14 @@
     ViewData["Title"] = "Index";
 }
 
+@if (ViewData["Message"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewData["Message"]
+    </div>
+}
+
+
 <form action="/Login/Authenticate" method="post">
     <table style="border:none">
         <tr>
