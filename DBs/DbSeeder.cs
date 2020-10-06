@@ -1,4 +1,5 @@
-﻿using SA51_CA_Project_Team10.Models;
+﻿using Microsoft.AspNetCore.Authorization.Infrastructure;
+using SA51_CA_Project_Team10.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace SA51_CA_Project_Team10.DBs
         {
             CreateUsers();
             CreateProducts();
-            _db.SaveChanges();
+            CreateOrders(10);
         }
 
         private void CreateUsers()
@@ -36,6 +37,7 @@ namespace SA51_CA_Project_Team10.DBs
                     Password = GenerateHashString(salt + user)
                 });
             }
+            _db.SaveChanges();
         }
 
         private void CreateProducts()
@@ -72,6 +74,50 @@ namespace SA51_CA_Project_Team10.DBs
                     ImageLink = "~/images/software/" + imagelinks[i]
                 });
             }
+            _db.SaveChanges();
+        }
+
+        private void CreateOrders(int orders)
+        {
+            List<User> users = _db.Users.ToList();
+            List<Product> products = _db.Products.ToList();
+            Random r = new Random();
+            
+
+            for (int i = 0; i < orders; i++)
+            {
+                List<int> used = new List<int>();
+                var startDate = new DateTime(2010, 1, 1);
+                var randomUser = users[r.Next(users.Count)];
+                var randomDate = startDate.AddDays(r.Next((DateTime.Today - startDate).Days));
+                var randomOrder = new Order { UserId = randomUser.Id, DateTime = randomDate };
+                _db.Orders.Add(randomOrder);
+                _db.SaveChanges();
+
+                for (int j = 0; j < r.Next(1, 6); j++)
+                {
+                    var randomNumber = r.Next(products.Count);
+                    while (used.Contains(randomNumber))
+                    {
+                        randomNumber = r.Next(products.Count);
+                    }
+                    used.Add(randomNumber);
+                    var randomProduct = products[randomNumber];
+                    var randomQuantity = r.Next(1, 6);
+                    var randomItem = new OrderDetail { OrderId = randomOrder.Id, ProductId = randomProduct.Id, Quantity = randomQuantity };
+                    _db.OrderDetails.Add(randomItem);
+                }
+                _db.SaveChanges();
+            }
+        }
+
+        private DateTime RandomDate()
+        {
+            Random gen = new Random();
+            DateTime start = new DateTime(1995, 1, 1);
+            int range = (DateTime.Today - start).Days;
+            
+            return start.AddDays(gen.Next(range));
         }
 
         private string GenerateHashString(string data)
@@ -99,6 +145,8 @@ namespace SA51_CA_Project_Team10.DBs
                 sb.Append(chars[random.Next(chars.Length)]);
             }
             return sb.ToString();
-        }        
+        }
+        
+        
     }
 }
