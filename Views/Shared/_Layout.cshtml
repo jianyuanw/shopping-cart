@@ -33,13 +33,13 @@
                         @if (ViewData["Logged"] != null && (bool)ViewData["Logged"])
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark @ViewData["Is_Login"]" asp-controller="Login" asp-action="Index">Login</a>
+                                <a class="nav-link text-dark @ViewData["Is_Login"]" asp-controller="Logout" asp-action="Index">Logout</a>
                             </li>
                         }
                         else
                         {
                             <li>
-                                <a class="nav-link text-dark" asp-controller="Logout" asp-action="Index">Logout</a>
+                                <a class="nav-link text-dark" asp-controller="Login" asp-action="Index">Login</a>
                             </li>
                         }
                     </ul>
