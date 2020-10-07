@@ -13,6 +13,7 @@ namespace SA51_CA_Project_Team10.Models
         public virtual User User { get; set; }
         
         public DateTime DateTime { get; set; }
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
 
     }
 }

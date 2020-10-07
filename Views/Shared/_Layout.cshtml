@@ -1,4 +1,17 @@
 ﻿<!DOCTYPE html>
+
+@{
+    if (ViewData["Username"] == null) { ViewData["Username"] = "Welcome"; }
+    else { ViewData["Username"] = $"Hello {ViewData["Username"]}"; }
+
+    string[] alert = new string[2];
+    if (TempData["Alert"] != null)
+    {
+        alert = ((string)TempData["Alert"]).Split("|");
+    }
+
+}
+
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -12,7 +25,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Gallery" asp-action="Index">Hello @ViewData["Username"]</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Gallery" asp-action="Index">@ViewData["Username"]</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -62,6 +75,12 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            @if (TempData["Alert"] != null)
+            {
+                <div class="alert alert-@alert[0]" role="alert">
+                    @alert[1]
+                </div>
+            }
             @RenderBody()
         </main>
     </div>

@@ -1,15 +1,7 @@
 ﻿
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Login";
 }
-
-@if (ViewData["Message"] != null)
-{
-    <div class="alert alert-danger" role="alert">
-        @ViewData["Message"]
-    </div>
-}
-
 
 <form action="/Login/Authenticate" method="post">
     <table style="border:none">

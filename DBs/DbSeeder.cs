@@ -2,6 +2,7 @@
 using SA51_CA_Project_Team10.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -21,6 +22,7 @@ namespace SA51_CA_Project_Team10.DBs
         {
             CreateUsers();
             CreateProducts();
+            CreateCarts();
             CreateOrders(10);
         }
 
@@ -77,16 +79,44 @@ namespace SA51_CA_Project_Team10.DBs
             _db.SaveChanges();
         }
 
+        private void CreateCarts()
+        {
+            List<User> users = _db.Users.ToList();
+            Random r = new Random();
+            List<Product> products = _db.Products.ToList();
+
+            foreach (User user in users)
+            {
+                List<int> used = new List<int>();
+                for (int i = 0; i < r.Next(1, 5); i++)
+                {
+                    var randomNumber = r.Next(products.Count);
+                    while (used.Contains(randomNumber))
+                    {
+                        randomNumber = r.Next(products.Count);
+                    }
+                    used.Add(randomNumber);
+                    var randomProduct = products[randomNumber];
+
+                    randomNumber = r.Next(1, 6);
+                    var randomCart = new Cart { ProductId = randomProduct.Id, UserId = user.Id, Quantity = randomNumber };
+                    _db.Carts.Add(randomCart);
+                }
+                _db.SaveChanges();
+            }
+        }
+
         private void CreateOrders(int orders)
         {
             List<User> users = _db.Users.ToList();
             List<Product> products = _db.Products.ToList();
+
             Random r = new Random();
-            
 
             for (int i = 0; i < orders; i++)
             {
                 List<int> used = new List<int>();
+                List<string> usedKeys = new List<string>();
                 var startDate = new DateTime(2010, 1, 1);
                 var randomUser = users[r.Next(users.Count)];
                 var randomDate = startDate.AddDays(r.Next((DateTime.Today - startDate).Days));
@@ -104,20 +134,33 @@ namespace SA51_CA_Project_Team10.DBs
                     used.Add(randomNumber);
                     var randomProduct = products[randomNumber];
                     var randomQuantity = r.Next(1, 6);
-                    var randomItem = new OrderDetail { OrderId = randomOrder.Id, ProductId = randomProduct.Id, Quantity = randomQuantity };
-                    _db.OrderDetails.Add(randomItem);
+                    for (int k = 0; k <= randomQuantity; k++)
+                    {
+                        var randomActivation = GenerateActivationKey(r);
+                        while (usedKeys.Contains(randomActivation))
+                        {
+                            randomActivation = GenerateActivationKey(r);
+                        }
+                        usedKeys.Add(randomActivation);
+                        var randomItem = new OrderDetail { Id = randomActivation, OrderId = randomOrder.Id, ProductId = randomProduct.Id };
+                        _db.OrderDetails.Add(randomItem);
+                    }
+                    
+                    _db.SaveChanges();
                 }
-                _db.SaveChanges();
             }
         }
 
-        private DateTime RandomDate()
+        private string GenerateActivationKey(Random r)
         {
-            Random gen = new Random();
-            DateTime start = new DateTime(1995, 1, 1);
-            int range = (DateTime.Today - start).Days;
-            
-            return start.AddDays(gen.Next(range));
+            const string chars = "abcdefghiijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < 14; i++)
+            {
+                if (i == 4 || i == 9) { sb.Append("-"); }
+                else { sb.Append(chars[r.Next(chars.Length)]); }
+            }
+            return sb.ToString();
         }
 
         private string GenerateHashString(string data)
@@ -131,8 +174,8 @@ namespace SA51_CA_Project_Team10.DBs
 
         private byte[] GetHash(string data)
         {
-            using (HashAlgorithm algorithm = SHA256.Create())
-                return algorithm.ComputeHash(Encoding.UTF8.GetBytes(data));
+            using HashAlgorithm algorithm = SHA256.Create();
+            return algorithm.ComputeHash(Encoding.UTF8.GetBytes(data));
         }
 
         private string GenerateSalt(int length)
