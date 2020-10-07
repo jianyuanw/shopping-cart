@@ -3,14 +3,6 @@
     ViewData["Title"] = "Login";
 }
 
-@if (TempData["Message"] != null)
-{
-    <div class="alert alert-danger" role="alert">
-        @TempData["Message"]
-    </div>
-}
-
-
 <form action="/Login/Authenticate" method="post">
     <table style="border:none">
         <tr>

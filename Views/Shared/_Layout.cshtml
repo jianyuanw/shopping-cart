@@ -3,6 +3,13 @@
 @{
     if (ViewData["Username"] == null) { ViewData["Username"] = "Welcome"; }
     else { ViewData["Username"] = $"Hello {ViewData["Username"]}"; }
+
+    string[] alert = new string[2];
+    if (TempData["Alert"] != null)
+    {
+        alert = ((string)TempData["Alert"]).Split("|");
+    }
+
 }
 
 <html lang="en">
@@ -67,6 +74,12 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            @if (TempData["Alert"] != null)
+            {
+                <div class="alert alert-@alert[0]" role="alert">
+                    @alert[1]
+                </div>
+            }
             @RenderBody()
         </main>
     </div>

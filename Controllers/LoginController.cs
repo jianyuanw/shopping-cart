@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using SA51_CA_Project_Team10.DBs;
 using SA51_CA_Project_Team10.Models;
 
@@ -24,7 +25,7 @@ namespace SA51_CA_Project_Team10.Controllers
             string sessionId = HttpContext.Request.Cookies["sessionId"];
             if (sessionId != null && _verify.VerifySession(sessionId, _db))
             {
-                TempData["Message"] = "Already logged in!";
+                TempData["Alert"] = "primary|Already logged in!";
                 return Redirect("/Gallery/Index");
             }
             ViewData["Is_Login"] = "font-weight: bold";
@@ -37,7 +38,7 @@ namespace SA51_CA_Project_Team10.Controllers
             User user = _db.Users.FirstOrDefault(x => x.Username == username);
             if (user == null || hasher.GenerateHashString(user.Salt + password) != user.Password)
             {
-                TempData["Message"] = "Username or password incorrect, please try again.";
+                TempData["Alert"] = "danger|Username or password incorrect, please try again.";
                 return Redirect("Index");                
             } else {
                 string cart = HttpContext.Request.Cookies["cart"];                
@@ -73,7 +74,7 @@ namespace SA51_CA_Project_Team10.Controllers
                     }*/
                 }
             }
-            TempData["Message"] = "Successfully logged in!";
+            TempData["Alert"] = "primary|Successfully logged in!";
             if (TempData["Redirect"] != null) 
             {
                 return Redirect((string) TempData["Redirect"]);
