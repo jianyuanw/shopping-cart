@@ -12,15 +12,17 @@ namespace SA51_CA_Project_Team10.Controllers
     public class LoginController : Controller
     {
         private readonly DbT10Software _db;
-        public LoginController(DbT10Software db)
+        private readonly Verify _verify;
+
+        public LoginController(DbT10Software db, Verify v)
         {
             _db = db;
+            _verify = v;
         }
         public IActionResult Index()
         {
             string sessionId = HttpContext.Request.Cookies["sessionId"];
-            if (sessionId != null &&
-                _db.Sessions.FirstOrDefault(session => session.Id == sessionId) != null)
+            if (sessionId != null && _verify.VerifySession(sessionId, _db))
             {
                 TempData["Message"] = "Already logged in!";
                 return Redirect("/Gallery/Index");
@@ -35,8 +37,8 @@ namespace SA51_CA_Project_Team10.Controllers
             User user = _db.Users.FirstOrDefault(x => x.Username == username);
             if (user == null || hasher.GenerateHashString(user.Salt + password) != user.Password)
             {
-                ViewData["Message"] = "Username or password incorrect, please try again.";
-                return View("Index");                
+                TempData["Message"] = "Username or password incorrect, please try again.";
+                return Redirect("Index");                
             } else {
                 string cart = HttpContext.Request.Cookies["cart"];                
                 if (cart == null)
