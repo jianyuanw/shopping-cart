@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -9,20 +10,12 @@ namespace SA51_CA_Project_Team10.Models
 {
     public class Hasher
     {        
-        public string GenerateHashString(string data)
+        public string GenerateHashString(string password, string saltString)
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (byte b in GetHash(data))
-                sb.Append(b.ToString("X2"));
-
-            return sb.ToString();
+            byte[] salt = Convert.FromBase64String(saltString);
+            byte[] encrypted = KeyDerivation.Pbkdf2(password, salt, KeyDerivationPrf.HMACSHA1, 10000, 32);
+            return Convert.ToBase64String(encrypted);
+                
         }
-
-        private byte[] GetHash(string data)
-        {
-            using (HashAlgorithm algorithm = SHA256.Create())
-                return algorithm.ComputeHash(Encoding.UTF8.GetBytes(data));
-        }
-
     }
 }
