@@ -1,6 +1,11 @@
 ﻿
 @{
     ViewData["Title"] = "Libraries Gallery";
+    List<Product> products = (List<Product>)ViewData["Products"];
+
+    int column = 3, row = 4, page = 1;
+    List<Product> showing = new List<Product>();
+    
 }
 
 @if (ViewData["Message"] != null)
@@ -10,4 +15,6 @@
     </div>
 }
 
-TODO: Gallery
+@foreach (Product p in products) { 
+    <p>@p.Id @p.Name @p.Price @p.ImageLink @p.Description   </p>
+}

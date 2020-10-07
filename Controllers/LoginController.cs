@@ -25,8 +25,8 @@ namespace SA51_CA_Project_Team10.Controllers
                 TempData["Message"] = "Already logged in!";
                 return Redirect("/Gallery/Index");
             }
-
-             return View();
+            ViewData["Is_Login"] = "font-weight: bold";
+            return View();
         }
 
         [HttpPost]
