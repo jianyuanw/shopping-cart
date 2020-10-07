@@ -112,7 +112,6 @@ namespace SA51_CA_Project_Team10.DBs
             List<Product> products = _db.Products.ToList();
 
             Random r = new Random();
-            
 
             for (int i = 0; i < orders; i++)
             {
