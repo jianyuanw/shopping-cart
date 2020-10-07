@@ -4,8 +4,17 @@
     List<Product> products = (List<Product>)ViewData["Products"];
 
     int column = 3, row = 4, page = 1;
+    int productListlen = products.Count;
+
+    //showing is what be showed on webpage
     List<Product> showing = new List<Product>();
-    
+
+    for (int i = (page - 1) * column * row; i < page * column * row && i < productListlen; ++i)
+        showing.Add(products[i]);
+
+    //pagination is how many page to show products
+    int pagination = productListlen / (column * row);
+    if (productListlen % (column * row) != 0) ++pagination;
 }
 
 @if (ViewData["Message"] != null)
@@ -14,6 +23,25 @@
         @ViewData["Message"]
     </div>
 }
+
+
+<table border='1'>
+    @for (int i = 0; i < showing.Count; i += column) {
+        <tr>
+            @for (int j = i; j < i + column && j < showing.Count; ++j) {
+                string url = showing[j].ImageLink.StartsWith("~") ? showing[j].ImageLink.Substring(1) : showing[j].ImageLink;
+                <td>
+                    <div>
+                        <img src="@url" width="320" height="320" />
+                        <h2>@showing[j].Name</h2>
+                        <p>@showing[j].Description</p>
+                        <button type="button">$@showing[j].Price - Add To Cart</button><br />
+                    </div>
+                </td>
+            }
+        </tr>
+    }
+</table>
 
 @foreach (Product p in products) { 
     <p>@p.Id @p.Name @p.Price @p.ImageLink @p.Description   </p>

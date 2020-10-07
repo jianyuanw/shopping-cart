@@ -1,0 +1,11 @@
+﻿/* To highlight selected item on the application menu */
+
+table {
+    margin: 0 auto;
+    text-align: center;
+}
+
+table td {
+    background-color: #CCE8EB;
+}
+
