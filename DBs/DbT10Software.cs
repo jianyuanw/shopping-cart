@@ -15,7 +15,7 @@ namespace SA51_CA_Project_Team10.DBs
         public DbT10Software(DbContextOptions<DbT10Software> options)
             : base(options) { }
 
-        public DbSet<ActivationCode> ActivationCodes { get; set; }
+        // public DbSet<ActivationCode> ActivationCodes { get; set; } // Tentatively commented out, can be deleted afterwards
         public DbSet<Cart> Carts { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
