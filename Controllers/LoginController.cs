@@ -36,7 +36,7 @@ namespace SA51_CA_Project_Team10.Controllers
         public IActionResult Authenticate(Hasher hasher, string username, string password)
         {
             User user = _db.Users.FirstOrDefault(x => x.Username == username);
-            if (user == null || hasher.GenerateHashString(user.Salt + password) != user.Password)
+            if (user == null || hasher.GenerateHashString(password, user.Salt) != user.Password)
             {
                 TempData["Alert"] = "danger|Username or password incorrect, please try again.";
                 return Redirect("Index");                

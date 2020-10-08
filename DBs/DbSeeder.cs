@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using SA51_CA_Project_Team10.Models;
 using System;
 using System.Collections.Generic;
@@ -31,12 +32,12 @@ namespace SA51_CA_Project_Team10.DBs
             string[] users = { "angelia", "derek", "jianyuan", "site", "yitong", "yubo", "zifeng" };
             foreach (string user in users)
             {
-                string salt = GenerateSalt(50);
+                byte[] salt = GenerateSalt();
                 _db.Add(new User
                 {
                     Username = user,
-                    Salt = salt,
-                    Password = GenerateHashString(salt + user)
+                    Salt = Convert.ToBase64String(salt),
+                    Password = GenerateHashString(user, salt)
                 });
             }
             _db.SaveChanges();
@@ -163,31 +164,20 @@ namespace SA51_CA_Project_Team10.DBs
             return sb.ToString();
         }
 
-        private string GenerateHashString(string data)
+        private string GenerateHashString(string password, byte[] salt)
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (byte b in GetHash(data))
-                sb.Append(b.ToString("X2"));
-
-            return sb.ToString();
+            byte[] encrypted = KeyDerivation.Pbkdf2(password, salt, KeyDerivationPrf.HMACSHA1, 10000, 32);
+            return Convert.ToBase64String(encrypted);
         }
 
-        private byte[] GetHash(string data)
+        private byte[] GenerateSalt()
         {
-            using HashAlgorithm algorithm = SHA256.Create();
-            return algorithm.ComputeHash(Encoding.UTF8.GetBytes(data));
-        }
-
-        private string GenerateSalt(int length)
-        {
-            const string chars = "abcdefghiijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-            Random random = new Random();
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < length; i++)
+            byte[] salt = new byte[16];
+            using (var rng = RandomNumberGenerator.Create())
             {
-                sb.Append(chars[random.Next(chars.Length)]);
+                rng.GetBytes(salt);
             }
-            return sb.ToString();
+            return salt;
         }
         
         
