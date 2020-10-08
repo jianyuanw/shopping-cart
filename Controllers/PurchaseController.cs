@@ -38,16 +38,42 @@ namespace SA51_CA_Project_Team10.Controllers
                 List<Order> orders = _db.Orders.ToList();
                 List<Product> products = _db.Products.ToList();
 
-                // Pass to View
-                ViewData["orderDetails"] = orderDetails;
-                ViewData["orders"] = orders;
-                ViewData["products"] = products;
-                ViewData["user"] = user;
+                // Join lists. Filter based on UserId. Order by date. Select relevant columns.
+                var purchases = orderDetails.OrderByDescending(od => od.Order.DateTime)
+                                            .Select(od => new { od.Product.ImageLink, od.Product.Name, od.Product.Description, od.Order.DateTime, od.Id })
+                                            .GroupBy(d => new { d.ImageLink, d.Name, d.Description, d.DateTime }).ToList();
+
+                var model = new PurchasesViewModel();
+
+                foreach (var group in purchases)
+                {
+                    bool product = false;
+                    var list = new List<string>();
+                    var COD = new ConciseOrderDetail();
+                    
+                    foreach (var item in group)
+                    {
+                        if (!product)
+                        {                            
+                            COD.ImageLink = item.ImageLink;
+                            COD.Name = item.Name;
+                            COD.Description = item.Description;
+                            COD.DateTime = item.DateTime;
+                            COD.Count = group.Count();
+                            product = true;
+                        }
+                        list.Add(item.Id);
+                    }
+                    COD.Ids = list;
+                    model._products.Add(COD);
+                }
+
+
 
                 // Bold menu item
                 ViewData["Is_Purchase"] = "font-weight: bold";
 
-                return View();
+                return View(model);
             }
             else // Else user is not logged in. Redirect to login page.
             {
