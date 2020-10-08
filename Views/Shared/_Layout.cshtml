@@ -71,7 +71,7 @@
                                 <a asp-controller="Cart" asp-action="Index"><img src="~/images/cart_icon.png" height="40" width="40" /></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Cart" asp-action="Index">@ViewData["cart_quantity"]</a>
+                                <a class="nav-link text-dark" id="cartnum" asp-controller="Cart" asp-action="Index">@ViewData["cart_quantity"]</a>
                             </li>
                         </ul>
 
