@@ -43,6 +43,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark">|</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Purchase" asp-action="Index" style="@ViewData["Is_Purchase"]">My Purchases</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark">|</a>
+                        </li>
                         @if (ViewData["Logged"] != null && (bool)ViewData["Logged"])
                         {
                             <li class="nav-item">
