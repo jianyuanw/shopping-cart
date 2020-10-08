@@ -27,7 +27,7 @@ namespace SA51_CA_Project_Team10.Controllers
 
             HttpContext.Response.Cookies.Delete("sessionId");
 
-            TempData["Message"] = "Successfully logged out!";
+            TempData["Alert"] = "primary|Successfully logged out!";
             return Redirect("/Gallery/Index");
         }
     }
