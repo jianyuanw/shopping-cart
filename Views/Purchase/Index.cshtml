@@ -44,56 +44,44 @@
     <table>
         @foreach (var group in purchases) // Loop through each group
         {
-            if (group.Count() == 1) // If quantity == 1, create table this way
-            {
-                <tr>
-                    <td class="border border-dark product-cell">
-                        <table class="w-100">
-                            <tr><td class="p-1 text-center w-100"><img src="@group.Key.ImageLink" class="border border-dark product-image" /></td></tr>
-                            <tr><td class="p-1 text-center font-weight-bold">@group.Key.Name</td></tr>
-                            <tr><td class="p-1 text-center">@group.Key.Description</td></tr>
-                            <tr><td class="p-1 text-center"><button type="button" class="btn btn-outline-dark btn-sm">Download</button></td></tr>
-                        </table>
-                    </td>
-                    <td class="border border-dark">
-                        <table>
-                            <tr><td class="p-1 font-weight-bold">Purchased On:</td><td class="p-1">@group.Key.DateTime.ToString("d MMM yyyy")</td></tr>
-                            <tr><td class="p-1 font-weight-bold">Quantity:</td><td class="p-1">@group.Count()</td></tr>
+            <tr>
+                <td class="border border-dark product-cell">
+                    <table class="w-100">
+                        <tr><td class="p-1 text-center w-100"><img src="@group.Key.ImageLink" class="border border-dark product-image" /></td></tr>
+                        <tr><td class="p-1 text-center font-weight-bold">@group.Key.Name</td></tr>
+                        <tr><td class="p-1 text-center">@group.Key.Description</td></tr>
+                        <tr><td class="p-1 text-center"><button type="button" class="btn btn-outline-dark btn-sm">Download</button></td></tr>
+                    </table>
+                </td>
+                <td class="border border-dark">
+                    <table>
+                        <tr><td class="p-1 font-weight-bold">Purchased On:</td><td class="p-1">@group.Key.DateTime.ToString("d MMM yyyy")</td></tr>
+                        <tr><td class="p-1 font-weight-bold">Quantity:</td><td class="p-1">@group.Count()</td></tr>
+                        @if (group.Count() == 1) // If quantity == 1, insert activation code as normal text
+                        {
                             @foreach (var item in group)
                             {
                                 <tr><td class="p-1 font-weight-bold">Activation Code:</td><td class="p-1">@item.Id</td></tr>
                             }
-                        </table>
-                    </td>
-                </tr>
-                <tr><td class="row-spacer"></td></tr>
-            }
-            else if (group.Count() > 1) // If quantity > 1, create table this way
-            {
-                <tr>
-                    <td class="border border-dark product-cell">
-                        <table class="w-100">
-                            <tr><td class="p-1 text-center w-100"><img src="@group.Key.ImageLink" class="border border-dark product-image" /></td></tr>
-                            <tr><td class="p-1 text-center font-weight-bold">@group.Key.Name</td></tr>
-                            <tr><td class="p-1 text-center">@group.Key.Description</td></tr>
-                            <tr><td class="p-1 text-center"><button type="button" class="btn btn-outline-dark btn-sm">Download</button></td></tr>
-                        </table>
-                    </td>
-                    <td class="border border-dark">
-                        <table>
-                            <tr><td class="p-1 font-weight-bold">Purchased On:</td><td class="p-1">@group.Key.DateTime.ToString("d MMM yyyy")</td></tr>
-                            <tr><td class="p-1 font-weight-bold">Quantity:</td><td class="p-1">@group.Count()</td></tr>
-                            <tr><td class="p-1 font-weight-bold">Activation Code:</td><td class="p-1"><select class="custom-select custom-select-sm">
-                                @foreach (var item in group)
-                                {
-                                    <option>@item.Id</option>
-                                }
-                            </select></td></tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr><td class="row-spacer"></td></tr>
-            }
+                        }
+                        else if (group.Count() > 1) // If quantity > 1, insert activation codes in dropdown menu
+                        {
+                            <tr>
+                                <td class="p-1 font-weight-bold">Activation Code:</td>
+                                <td class="p-1">
+                                    <select class="custom-select custom-select-sm">
+                                        @foreach (var item in group)
+                                        {
+                                            <option>@item.Id</option>
+                                        }
+                                    </select>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </td>
+            </tr>
+            <tr><td class="row-spacer"></td></tr>
         }
     </table>
 </div>
