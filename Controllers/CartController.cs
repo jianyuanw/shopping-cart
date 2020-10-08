@@ -34,10 +34,31 @@ namespace SA51_CA_Project_Team10.Controllers
                     total += cart.Quantity;
                 ViewData["cart_quantity"] = total;
             }
+            else
+            {  //tentative cart
+                if (HttpContext.Request.Cookies["tempCart"] != null)
+                {
+                    String[] cart = HttpContext.Request.Cookies["tempCart"].Split("*");
+                    int sum = 0;
+                    foreach (string c in cart)
+                        if (c != "" && c != null) ++sum;
+                    ViewData["cart_quantity"] = sum;
+                }
+                else
+                {
+                    ViewData["cart_quantity"] = 0;
+                }
+            }
+
+            //-----implement cart logic start here(please dont modify others part code)----//
+            //implement...
+            //implement...
+            //-----implement cart logic end here(please dont modify others part code)----//
 
             //bold navbar 
             ViewData["Is_Cart"] = "font-weight: bold";
             return View();
         }
+
     }
 }

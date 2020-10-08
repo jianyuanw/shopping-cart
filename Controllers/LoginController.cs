@@ -28,6 +28,20 @@ namespace SA51_CA_Project_Team10.Controllers
                 TempData["Alert"] = "primary|Already logged in!";
                 return Redirect("/Gallery/Index");
             }
+            else {
+                if (HttpContext.Request.Cookies["tempCart"] != null)
+                {
+                    String[] cart = HttpContext.Request.Cookies["tempCart"].Split("*");
+                    int sum = 0;
+                    foreach (string c in cart)
+                        if (c != "" && c != null) ++sum;
+                    ViewData["cart_quantity"] = sum;
+                }
+                else
+                {
+                    ViewData["cart_quantity"] = 0;
+                }
+            }
             ViewData["Is_Login"] = "font-weight: bold";
             return View();
         }
