@@ -34,20 +34,20 @@
 <div style="text-align:center">
     <form class="inlinef" action="/Gallery/SearchAction" method="post">
         <input style="font-size:30px" size="35" type="text"  id="searchbar" name="searchbar" value="@ViewData["searchbar"]" placeholder="Search.." />
-        <button style="font-size:30px" type="submit"  style="float:right;">Go</button>
+        <button style="font-size:30px; float:right;" type="submit">Go</button>
     </form>
 </div>
     
-<table class="gallery" border='1'>
+<table class="gallery" style="border-spacing: 20px 20px; border-collapse: separate;" border="0">
     @for (int i = 0; i < showing.Count; i += column)
     {
         <tr>
             @for (int j = i; j < i + column && j < showing.Count; ++j)
             {
                 string url = showing[j].ImageLink.StartsWith("~") ? showing[j].ImageLink.Substring(1) : showing[j].ImageLink;
-                <td class="galleryTtd">
+                <td class="galleryTtd" style="border: 2px solid black">
                     <div>
-                        <img src="@url" width="320" height="320" />
+                        <img src="@url" width="75" />
                         <h2>@showing[j].Name</h2>
                         <p>@showing[j].Description</p>
                         <button class="productbtn" type="button" productId="@showing[j].Id">$@showing[j].Price - Add To Cart</button><br />
