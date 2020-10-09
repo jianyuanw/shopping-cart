@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "ItemCart";
+    string[] productNames = (string[])ViewData["productNames"];
+    string[] productPhotoSrcs = (string[])ViewData["productPhotoSrcs"];
+    double[] prices = (double[])ViewData["prices"];
+    int[] quantities = (int[])ViewData["quantities"];
+}
+
+<style>
+    .center_div {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+    }
+</style>
+
+<div class="center_div">
+    <h2>Cart</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>Product</td>
+                <td>Name</td>
+                <td>Price</td>
+                <td>Quantity</td>
+                <td>Total</td>
+                <td>Action</td>
+            </tr>           
+        </thead>
+
+        <tbody>
+        </tbody>
+    </table>
+</div>
