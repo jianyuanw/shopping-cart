@@ -12,7 +12,7 @@
     }
 </style>
 
-<div class="center_div">
+<div class="center_div" id="CartPageTable">
     <h2>Cart</h2>
     <table>
         <thead>
@@ -27,6 +27,23 @@
         </thead>
 
         <tbody>
+            @for(int itemIndex = 0; itemIndex < itemsInCart.Count; itemIndex++)
+            {
+                <tr>
+                    <td><img src="" /></td>
+                    <td><span>@itemsInCart[itemIndex].Product.Name</span></td>
+                    <td><span>@itemsInCart[itemIndex].Product.Price</span></td>
+                    <td><span>@itemsInCart[itemIndex].Quantity</span></td>
+                    <td><span>later do</span></td>
+                    <td></td>
+                </tr>
+            }
         </tbody>
     </table>
+</div>
+
+<div id="CartPageCounter">
+    <p>Total: ?</p>
+    <button>Back</button>
+    <button>CheckOut</button>
 </div>
