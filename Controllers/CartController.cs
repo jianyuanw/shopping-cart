@@ -57,7 +57,10 @@ namespace SA51_CA_Project_Team10.Controllers
 
             //bold navbar 
             ViewData["Is_Cart"] = "font-weight: bold";
-            return View();
+            return View("ItemCart");
+
+            // if no item in cart
+            // return View("NoItemCart");
         }
 
     }
