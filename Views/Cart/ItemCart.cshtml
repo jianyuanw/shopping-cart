@@ -88,55 +88,48 @@
     }
 </style>
 
-<div id="WholePage" style="position:relative">
-
-    <div class="center_div" id="CartPageTable">
-        <h2>    Cart</h2>
-        <table class="cart_table">
-            <thead>
+<div class="center_div" id="CartPageTable">
+    <h2>    Cart</h2>
+    <table class="cart_table">
+        <thead>
+            <tr>
+                <td>Product</td>
+                <td>Name</td>
+                <td>Price</td>
+                <td>Quantity</td>
+                <td>Total</td>
+                <td>Action</td>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int itemIndex = 0; itemIndex < itemsInCart.Count; itemIndex++)
+            {
+                string url = itemsInCart[itemIndex].Product.ImageLink;
+                url = url.StartsWith("~") ? url.Substring(1) : url;
                 <tr>
-                    <td>Product</td>
-                    <td>Name</td>
-                    <td>Price</td>
-                    <td>Quantity</td>
-                    <td>Total</td>
-                    <td>Action</td>
+                    <td><img src=@url class="cart_item_photo" /></td>
+                    <td><span>@itemsInCart[itemIndex].Product.Name</span></td>
+                    <td><span>@itemsInCart[itemIndex].Product.Price</span></td>
+                    <td>
+                        <button class="cart_action_buttons"><img src="/images/minusSymbol.png"></button>
+                        <span>@itemsInCart[itemIndex].Quantity</span>
+                        <button class="cart_action_buttons"><img src="/images/addSymbol.png"></button>
+                    </td>
+                    <td><span>later do</span></td>
+                    <td><button class="cart_action_buttons"><img src="/images/deleteSymbol.png"></button></td>
                 </tr>
-            </thead>
-            <tbody>
-                @for (int itemIndex = 0; itemIndex < itemsInCart.Count; itemIndex++)
-                {
-                    string url = itemsInCart[itemIndex].Product.ImageLink;
-                    url = url.StartsWith("~") ? url.Substring(1) : url;
-                    <tr>
-                        <td><img src=@url class="cart_item_photo" /></td>
-                        <td><span>@itemsInCart[itemIndex].Product.Name</span></td>
-                        <td><span>@itemsInCart[itemIndex].Product.Price</span></td>
-                        <td>
-                            <button class="cart_action_buttons"><img src="/images/minusSymbol.png"></button>
-                            <span>@itemsInCart[itemIndex].Quantity</span>
-                            <button class="cart_action_buttons"><img src="/images/addSymbol.png"></button>
-                        </td>
-                        <td><span>later do</span></td>
-                        <td><button class="cart_action_buttons"><img src="/images/deleteSymbol.png"></button></td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-
-    <div id="CartPageCounter">
-        <table class="counter_table">
-            <tr></tr>
-            <tr>
-                <td>Total: <span>(later..)</span></td>
-            </tr>
-            <tr>
-                <td>
-                    <button class="cart_check_out_button" id="checkoutButton">CheckOut</button>
-                </td>
-            </tr>
-            <tr></tr>
-        </table>
-    </div>
+            }
+        </tbody>
+    </table>
+    
+    <table class="counter_table">
+        <tr></tr>
+        <tr>
+            <td>Total: <span>(later..)</span></td>
+        </tr>
+        <tr>
+            <td><button class="cart_check_out_button" id="checkoutButton">CheckOut</button></td>
+        </tr>
+        <tr></tr>
+    </table>
 </div>
