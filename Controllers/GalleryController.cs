@@ -21,8 +21,6 @@ namespace SA51_CA_Project_Team10.Controllers
         }
         public IActionResult Index(int page)
         {
-            //alert message
-            ViewData["Message"] = TempData["Message"];
 
             //validate session
             if (HttpContext.Request.Cookies["sessionId"] != null && verify.VerifySession(HttpContext.Request.Cookies["sessionId"], _db))
