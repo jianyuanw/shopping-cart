@@ -1,29 +1,97 @@
-﻿@{
+﻿
+@{ 
     ViewData["Title"] = "ItemCart";
     List<Cart> itemsInCart = (List<Cart>)ViewData["ItemsInCart"];
+
+    // prepare naming of cart items
+    int types = itemsInCart.Count;
+    string[] minusQuantityButton = new string[types];
+    string[] addQuantityButton = new string[types];
+    string[] deleteItemButton = new string[types];
 }
 
 <style>
-    .center_div {
-        position: absolute;
-        left: 50%;
+    .center_div{
+        position:absolute;
+        left:50%;
         transform:translateX(-50%);
     }
 
     .cart_item_photo {
         height: 80pt;
         width: 80pt;
+        height: 60pt;
+        width: 60pt;
     }
 
     .cart_table{
         width:600pt;
+    }
+
+    .cart_table td {
+        width:300px;
+        text-align: center;
+        border: solid 2px white;
+    }
+
+    .cart_table thead{
+        background-color:black;
+        color:white;
+    }
+
+    .cart_table thead tr{
+        height: 30px;
+    }
+
+    .cart_table tbody{
+        background-color:aliceblue;
+    }
+
+    .cart_table tbody tr{
+        height:120px;
+    }
+
+    .cart_action_buttons {
+        vertical-align: central;
+        backface-visibility:hidden;
+        background-color:transparent;
+        border:none;
+    }
+
+    .cart_action_buttons img{
+        width:12pt;
+        height:12pt;
+    }
+
+    .cart_check_out_button {
+        background-color: black;
+        color: white;
+        border: none;
+        width: 120pt;
+        height: 20pt;
+        font-size: 14pt;
+        text-align:center;
+        vertical-align:central;
+    }
+
+    .counter_table{
+        width:600pt;
+    }
+
+    .counter_table tr{
+        height:32pt;
+    }
+
+    .counter_table td {
+        text-align:right;
+        font-size:16pt;
     }
 </style>
 
 <div id="WholePage" style="position:relative">
 
     <div class="center_div" id="CartPageTable">
-        <h2>Cart</h2>
+        <h2>    Cart</h2>
         <table class="cart_table">
             <thead>
                 <tr>
@@ -35,7 +103,6 @@
                     <td>Action</td>
                 </tr>
             </thead>
-
             <tbody>
                 @for (int itemIndex = 0; itemIndex < itemsInCart.Count; itemIndex++)
                 {
@@ -45,18 +112,31 @@
                         <td><img src=@url class="cart_item_photo" /></td>
                         <td><span>@itemsInCart[itemIndex].Product.Name</span></td>
                         <td><span>@itemsInCart[itemIndex].Product.Price</span></td>
-                        <td><span>@itemsInCart[itemIndex].Quantity</span></td>
+                        <td>
+                            <button class="cart_action_buttons"><img src="/images/minusSymbol.png"></button>
+                            <span>@itemsInCart[itemIndex].Quantity</span>
+                            <button class="cart_action_buttons"><img src="/images/addSymbol.png"></button>
+                        </td>
                         <td><span>later do</span></td>
-                        <td></td>
+                        <td><button class="cart_action_buttons"><img src="/images/deleteSymbol.png"></button></td>
                     </tr>
                 }
             </tbody>
         </table>
+    </div>
 
-        <div id="CartPageCounter">
-            <p>Total: ?</p>
-            <button>Back</button>
-            <button>CheckOut</button>
-        </div>
-    </div>   
+    <div id="CartPageCounter">
+        <table class="counter_table">
+            <tr></tr>
+            <tr>
+                <td>Total: <span>(later..)</span></td>
+            </tr>
+            <tr>
+                <td>
+                    <button class="cart_check_out_button" id="checkoutButton">CheckOut</button>
+                </td>
+            </tr>
+            <tr></tr>
+        </table>
+    </div>
 </div>
