@@ -6,44 +6,57 @@
 <style>
     .center_div {
         position: absolute;
-        top: 30%;
         left: 50%;
-        transform: translate(-50%,-50%);
+        transform:translateX(-50%);
+    }
+
+    .cart_item_photo {
+        height: 80pt;
+        width: 80pt;
+    }
+
+    .cart_table{
+        width:600pt;
     }
 </style>
 
-<div class="center_div" id="CartPageTable">
-    <h2>Cart</h2>
-    <table>
-        <thead>
-            <tr>
-                <td>Product</td>
-                <td>Name</td>
-                <td>Price</td>
-                <td>Quantity</td>
-                <td>Total</td>
-                <td>Action</td>
-            </tr>           
-        </thead>
+<div id="WholePage" style="position:relative">
 
-        <tbody>
-            @for(int itemIndex = 0; itemIndex < itemsInCart.Count; itemIndex++)
-            {
+    <div class="center_div" id="CartPageTable">
+        <h2>Cart</h2>
+        <table class="cart_table">
+            <thead>
                 <tr>
-                    <td><img src="" /></td>
-                    <td><span>@itemsInCart[itemIndex].Product.Name</span></td>
-                    <td><span>@itemsInCart[itemIndex].Product.Price</span></td>
-                    <td><span>@itemsInCart[itemIndex].Quantity</span></td>
-                    <td><span>later do</span></td>
-                    <td></td>
+                    <td>Product</td>
+                    <td>Name</td>
+                    <td>Price</td>
+                    <td>Quantity</td>
+                    <td>Total</td>
+                    <td>Action</td>
                 </tr>
-            }
-        </tbody>
-    </table>
-</div>
+            </thead>
 
-<div id="CartPageCounter">
-    <p>Total: ?</p>
-    <button>Back</button>
-    <button>CheckOut</button>
+            <tbody>
+                @for (int itemIndex = 0; itemIndex < itemsInCart.Count; itemIndex++)
+                {
+                    string url = itemsInCart[itemIndex].Product.ImageLink;
+                    url = url.StartsWith("~") ? url.Substring(1) : url;
+                    <tr>
+                        <td><img src=@url class="cart_item_photo" /></td>
+                        <td><span>@itemsInCart[itemIndex].Product.Name</span></td>
+                        <td><span>@itemsInCart[itemIndex].Product.Price</span></td>
+                        <td><span>@itemsInCart[itemIndex].Quantity</span></td>
+                        <td><span>later do</span></td>
+                        <td></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div id="CartPageCounter">
+            <p>Total: ?</p>
+            <button>Back</button>
+            <button>CheckOut</button>
+        </div>
+    </div>   
 </div>
