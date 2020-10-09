@@ -27,6 +27,13 @@
         </thead>
 
         <tbody>
+            @for(int itemIndex = 0; itemIndex < itemsInCart.Count; itemIndex++)
+            {
+                <tr>
+                    <td><img src="" /></td>
+                    <td><span>@itemsInCart[itemIndex].Product.Name</span></td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>
