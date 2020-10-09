@@ -20,6 +20,7 @@ namespace SA51_CA_Project_Team10.Controllers
         }
         public IActionResult Index()
         {
+
             //validate session 
             if (HttpContext.Request.Cookies["sessionId"] != null && verify.VerifySession(HttpContext.Request.Cookies["sessionId"], _db))
             {
@@ -33,6 +34,9 @@ namespace SA51_CA_Project_Team10.Controllers
                 foreach (Cart cart in carts)
                     total += cart.Quantity;
                 ViewData["cart_quantity"] = total;
+
+                // pack Cart list and deliver to view
+                ViewData["ItemsInCart"] = carts;
             }
             else
             {  //tentative cart
@@ -43,12 +47,18 @@ namespace SA51_CA_Project_Team10.Controllers
                     foreach (string c in cart)
                         if (c != "" && c != null) ++sum;
                     ViewData["cart_quantity"] = sum;
+
+                    // -----implement create List <object> and deliver to ViewData["ItemsInCart"]
                 }
                 else
                 {
                     ViewData["cart_quantity"] = 0;
                 }
             }
+
+            // check the cart_quantity, if no item in cart, return no item cart page;
+            if((int)ViewData["cart_quantity"] == 0)
+                return View("NoItemCart");
 
             //-----implement cart logic start here(please dont modify others part code)----//
             //implement...
@@ -59,8 +69,6 @@ namespace SA51_CA_Project_Team10.Controllers
             ViewData["Is_Cart"] = "font-weight: bold";
             return View("ItemCart");
 
-            // if no item in cart
-            // return View("NoItemCart");
         }
 
     }

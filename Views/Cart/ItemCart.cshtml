@@ -1,9 +1,6 @@
 ﻿@{
     ViewData["Title"] = "ItemCart";
-    string[] productNames = (string[])ViewData["productNames"];
-    string[] productPhotoSrcs = (string[])ViewData["productPhotoSrcs"];
-    double[] prices = (double[])ViewData["prices"];
-    int[] quantities = (int[])ViewData["quantities"];
+    List<Cart> itemsInCart = (List<Cart>)ViewData["ItemsInCart"];
 }
 
 <style>
