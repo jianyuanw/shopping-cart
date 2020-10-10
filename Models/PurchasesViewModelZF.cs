@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SA51_CA_Project_Team10.Models
 {
-    public class PurchasesViewModel
+    public class PurchasesViewModelZF
     {
         public DateTime DateTime { get; set; }
         public string ImageLink { get; set; }

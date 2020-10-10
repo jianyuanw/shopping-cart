@@ -40,14 +40,14 @@ namespace SA51_CA_Project_Team10.Controllers
                 List<Order> order = _db.Orders.ToList();
 
                 //Implement sql logic here - need to create a viewmodel class
-                IEnumerable<PurchasesViewModel> table =
+                IEnumerable<PurchasesViewModelZF> table =
                     from o in order
                     join od in orderDetail on o.Id equals od.OrderId
                     join p in product on od.ProductId equals p.Id
                     where o.UserId == userId
                     select new { o.DateTime, od.Id, p.ImageLink, p.Name, p.Description } into y
                     group y by new { y.DateTime, y.ImageLink, y.Name, y.Description } into grp
-                    select new PurchasesViewModel {
+                    select new PurchasesViewModelZF {
                         DateTime = grp.Key.DateTime,
                         ImageLink = grp.Key.ImageLink,
                         Name = grp.Key.Name,
