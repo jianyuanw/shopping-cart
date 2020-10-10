@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
 using Microsoft.AspNetCore.Mvc;
@@ -22,32 +23,28 @@ namespace SA51_CA_Project_Team10.Controllers
         }
         public IActionResult Index(int page)
         {
-
+            string sessionId = HttpContext.Request.Cookies["sessionId"];
             //validate session
-            if (verify.VerifySession(HttpContext.Request.Cookies["sessionId"], _db))
+            if (verify.VerifySession(sessionId, _db))
             {
                 ViewData["Logged"] = true;
-                int userId = _db.Sessions.Where(x => x.Id == HttpContext.Request.Cookies["sessionId"]).ToList()[0].UserId;
-                ViewData["Username"] = _db.Users.Where(x => x.Id == userId).ToList()[0].Username;
+                User user = _db.Sessions.FirstOrDefault(x => x.Id == sessionId).User;
+
+                ViewData["Username"] = user.Username;
 
                 //retrieve product number labeled beside icon
-                List<Cart> carts = _db.Carts.Where(x => x.UserId == userId).ToList();
-                int total = 0;
-                foreach (Cart cart in carts)
-                    total += cart.Quantity;
-                ViewData["cart_quantity"] = total;
+                List<Cart> carts = _db.Carts.Where(x => x.UserId == user.Id).ToList();
+                ViewData["cart_quantity"] = carts.Count;
             }      
             else{  //tentative cart
-                if (HttpContext.Request.Cookies["tempCart"] != null)
+                string cartCookie = HttpContext.Request.Cookies["guestCart"];
+                if (cartCookie == null)
                 {
-                    String[] cart = HttpContext.Request.Cookies["tempCart"].Split("*");
-                    int sum = 0;
-                    foreach (string c in cart)
-                        if (c != "" && c != null) ++sum;
-                    ViewData["cart_quantity"] = sum;
+                    ViewData["cart_quantity"] = 0;
                 }
                 else {
-                    ViewData["cart_quantity"] = 0;
+                    var guestCart = JsonSerializer.Deserialize<GuestCart>(HttpContext.Request.Cookies["guestCart"]);
+                    ViewData["cart_quantity"] = guestCart.Count();
                 }
             }
 
@@ -127,14 +124,17 @@ namespace SA51_CA_Project_Team10.Controllers
                 });
             }
             else {
-                if (HttpContext.Request.Cookies["tempCart"] != null)
+                GuestCart guestCart;
+                if (HttpContext.Request.Cookies["guestCart"] != null)
                 {
-                    HttpContext.Response.Cookies.Append("tempCart", HttpContext.Request.Cookies["tempCart"] + "*" + productId);
+                    guestCart = JsonSerializer.Deserialize<GuestCart>(HttpContext.Request.Cookies["guestCart"]);
                 }
                 else
                 {
-                    HttpContext.Response.Cookies.Append("tempCart", "*" + productId);
+                    guestCart = new GuestCart();
                 }
+                guestCart.Add(productId, _db.Products.FirstOrDefault(p => p.Id == productId));
+                HttpContext.Response.Cookies.Append("guestCart", JsonSerializer.Serialize<GuestCart>(guestCart));
                 return Json(new
                 {
                     success = true

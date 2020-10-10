@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+using System.Text.Json;
 using SA51_CA_Project_Team10.DBs;
 using SA51_CA_Project_Team10.Models;
 
@@ -27,13 +27,11 @@ namespace SA51_CA_Project_Team10.Controllers
                 return Redirect("/Gallery/Index");
             }
             else {
-                if (HttpContext.Request.Cookies["tempCart"] != null)
+                string cartCookie = HttpContext.Request.Cookies["guestCart"];
+                if (cartCookie != null)
                 {
-                    String[] cart = HttpContext.Request.Cookies["tempCart"].Split("*");
-                    int sum = 0;
-                    foreach (string c in cart)
-                        if (c != "" && c != null) ++sum;
-                    ViewData["cart_quantity"] = sum;
+                    GuestCart guestCart = JsonSerializer.Deserialize<GuestCart>(cartCookie);
+                    ViewData["cart_quantity"] = guestCart.Count();
                 }
                 else
                 {
@@ -52,41 +50,47 @@ namespace SA51_CA_Project_Team10.Controllers
             {
                 TempData["Alert"] = "danger|Username or password incorrect, please try again.";
                 return Redirect("Index");                
-            } else {
-                string cart = HttpContext.Request.Cookies["cart"];                
-                if (cart == null)
+            } else
+            {
+                // Create and store session
+                string guid = Guid.NewGuid().ToString();
+                _db.Sessions.Add(new Session
                 {
-                    string guid = Guid.NewGuid().ToString();
-                    _db.Sessions.Add(new Session
+                    Id = guid,
+                    UserId = user.Id,
+                    TimeStamp = DateTime.Now
+                });
+                _db.SaveChanges();
+                Response.Cookies.Append("sessionId", guid);
+                TempData["Alert"] = "primary|Successfully logged in!";
+
+                string cartCookie = HttpContext.Request.Cookies["guestCart"];                
+                if (cartCookie != null)
+                {
+                    // Merges guestCart with current cart in account if guestCart exists
+                    GuestCart guestCart = JsonSerializer.Deserialize<GuestCart>(cartCookie);
+                    foreach (var product in guestCart.Products)
                     {
-                        Id = guid,
-                        UserId = user.Id,
-                        TimeStamp = DateTime.Now
-                    });
-                    _db.SaveChanges();
-                    Response.Cookies.Append("sessionId", guid);
-                } else {
-                    /* TODO: Cart merging logic here
-                    if (sessionId != userSession.SessionId)
-                    {
-                        List<Cart> accountCart = _db.Carts.Where(cart => cart.SessionId == userSession.SessionId).ToList();
-
-                        List<int> products = _db.Carts.Where(cart => cart.SessionId == userSession.SessionId)
-                                                      .Select(cart => cart.ProductId).ToList();
-
-                        List<Cart> currentCart = _db.Carts.Where(cart => cart.SessionId == sessionId).ToList();
-
-                        foreach (Cart c in currentCart)
+                        var productInDb = _db.Carts.FirstOrDefault(cart => cart.ProductId == product.ProductId && cart.UserId == user.Id);
+                        if (productInDb != null)
                         {
-                            if (products.Contains(c.ProductId))
+                            productInDb.Quantity += product.Quantity;
+                        } else
+                        {
+                            _db.Carts.Add(new Cart
                             {
-                                Cart 
-                            }
+                                ProductId = product.ProductId,
+                                UserId = user.Id,
+                                Quantity = product.Quantity
+                            });
                         }
-                    }*/
+                    }
+                    _db.SaveChanges();
+                    HttpContext.Response.Cookies.Delete("guestCart");
+                    TempData["Alert"] += $" {guestCart.Count()} item(s) from your previous cart has been merged into your account cart.";
                 }
             }
-            TempData["Alert"] = "primary|Successfully logged in!";
+            
             if (TempData["Redirect"] != null) 
             {
                 return Redirect((string) TempData["Redirect"]);

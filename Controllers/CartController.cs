@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SA51_CA_Project_Team10.DBs;
@@ -18,47 +19,47 @@ namespace SA51_CA_Project_Team10.Controllers
         }
         public IActionResult Index(Verify v)
         {
-
+            string sessionId = HttpContext.Request.Cookies["sessionId"];
             //validate session 
-            if (v.VerifySession(HttpContext.Request.Cookies["sessionId"], _db))
+            if (v.VerifySession(sessionId, _db))
             {
                 ViewData["Logged"] = true;
-                int userId = _db.Sessions.Where(x => x.Id == HttpContext.Request.Cookies["sessionId"]).ToList()[0].UserId;
-                ViewData["Username"] = _db.Users.Where(x => x.Id == userId).ToList()[0].Username;
+                User user = _db.Sessions.FirstOrDefault(s => s.Id == sessionId).User;
+
+                ViewData["Username"] = user.Username;
 
                 //retrieve product number labeled beside icon
-                List<Cart> carts = _db.Carts.Where(x => x.UserId == userId).ToList();
-                int total = 0;
-                foreach (Cart cart in carts)
-                    total += cart.Quantity;
-                ViewData["cart_quantity"] = total;
+                List<Cart> carts = _db.Carts.Where(x => x.UserId == user.Id).ToList();
+
+                ViewData["cart_quantity"] = carts.Count;
 
                 // pack Cart list and deliver to view; now user logged in;
                 ViewData["ItemsInCart"] = carts;
             }
             else
-            {  
+            {
+                string cartCookie = HttpContext.Request.Cookies["guestCart"];
                 //tentative cart; now user not log in;
-                if (HttpContext.Request.Cookies["tempCart"] != null)
+                if (cartCookie != null)
                 {
-                    string[] cart = HttpContext.Request.Cookies["tempCart"].Split("*");
-                    int sum = 0;
-                    foreach (string c in cart)
-                        if (c != "" && c != null) ++sum;
-                    ViewData["cart_quantity"] = sum;
+                    var guestCart = JsonSerializer.Deserialize<GuestCart>(HttpContext.Request.Cookies["guestCart"]);
+
+                    ViewData["cart_quantity"] = guestCart.Count();
+
+                    ViewData["ItemsInCart"] = guestCart.Products;
 
                     // implement create List <object> and deliver to ViewData["ItemsInCart"]
-                    List<Cart> noLoginCart = new List<Cart>();
+                    // List<Cart> noLoginCart = new List<Cart>();
 
                     // get productId and merge all same product into List<Cart> noLoginCart
                     // packed static method in this class below: DeriveNoLoginCartListFromCookie
-                    noLoginCart = DeriveNoLoginCartListFromCookie(noLoginCart, cart);
+                    // noLoginCart = DeriveNoLoginCartListFromCookie(noLoginCart, cart);
 
                     // implement all information in List<Cart> noLoginCart
                     // packed static method in this class below: FillingAllInformationOfCartObjectBaseOnProductId
-                    noLoginCart = FillingAllInformationOfCartObjectBaseOnProductId(noLoginCart);
+                    // noLoginCart = FillingAllInformationOfCartObjectBaseOnProductId(noLoginCart);
 
-                    ViewData["ItemsInCart"] = noLoginCart;
+                    // ViewData["ItemsInCart"] = noLoginCart;
                 }
                 else
                 {
@@ -81,7 +82,7 @@ namespace SA51_CA_Project_Team10.Controllers
 
         }
 
-        public static List<Cart> DeriveNoLoginCartListFromCookie(List<Cart> noLoginCart, string[] cart)
+        /*public static List<Cart> DeriveNoLoginCartListFromCookie(List<Cart> noLoginCart, string[] cart)
         {
             for (int i = 0; i < cart.Length; i++)
             {
@@ -114,7 +115,7 @@ namespace SA51_CA_Project_Team10.Controllers
                 // noLoginCart[i].Product = from Products where Id == productIDinCode select *;
             }
             return noLoginCart;
-        }
+        }*/
 
     }
 }

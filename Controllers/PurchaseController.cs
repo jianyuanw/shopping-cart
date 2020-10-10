@@ -30,7 +30,7 @@ namespace SA51_CA_Project_Team10.Controllers
                 // Bold menu item
                 ViewData["Is_Purchase"] = "font-weight: bold";
 
-                User user = _db.Users.FirstOrDefault(x => x.Id == session.UserId);
+                User user = _db.Sessions.FirstOrDefault(x => x.Id == sessionId).User;
 
                 // Display username at top left
                 ViewData["Username"] = user.Username;
