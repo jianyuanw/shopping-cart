@@ -50,6 +50,12 @@
                                 <a class="nav-link text-dark" asp-controller="Cart" asp-action="Checkout">Checkout</a>
                             </li>
                         }
+                        else if ((string)ViewData["Title"] == "Login")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Gallery" asp-action="Index">Gallery</a>
+                            </li>
+                        }
 
                         @if ((string)ViewData["Title"] == "Libraries Gallery" || (string)ViewData["Title"] == "My Purchases")
                         {

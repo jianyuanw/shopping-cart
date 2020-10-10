@@ -47,7 +47,9 @@ namespace SA51_CA_Project_Team10.DBs
         private void CreateProducts()
         {
             
-            string[] names = { ".NET Charts", ".NET PayPal", ".NET ML", ".NET Analytics", ".NET Logger", ".NET Numerics" };
+            string[] names = { ".NET Charts", ".NET PayPal", ".NET ML", ".NET Analytics", ".NET Logger", ".NET Numerics", 
+                               "WhiteStar Action", "WhiteStar Alert", "WhiteStar Clink", "WhiteStar Find", "WhiteStar Sign", "WhiteStar Squash",
+                               "Audiosoft Tuner"};
             string[] descriptions =
             {
                 "Brings powerful charting capabilities to your .NET applications",
@@ -55,9 +57,16 @@ namespace SA51_CA_Project_Team10.DBs
                 "Supercharged .NET machine learning libraries.",
                 "Performs data mining and analytics easily in .NET",
                 "Logs and aggregates events easily in your .NET apps.",
-                "Powerful numerical methods for your .NET simulations"
+                "Powerful numerical methods for your .NET simulations",
+                "All your video editing needs in one app!",
+                "Never miss a deadline or event again.",
+                "Organize business meetings within a clink",
+                "Finds and tracks all your inventory",
+                "Documents and stores all digitally signed documents",
+                "Keep your computer safe from malware and viruses!",
+                "Parses audio of off-tune instruments and digitally tunes them"
             };
-            int[] prices = { 99, 69, 299, 299, 49, 199 };
+            int[] prices = { 99, 69, 299, 299, 49, 199, 65, 15, 35, 55, 25, 45, 35 };
             string[] imagelinks =
             {
                 "NET_Charts.png",
@@ -65,7 +74,14 @@ namespace SA51_CA_Project_Team10.DBs
                 "NET_ML.png",
                 "NET_Analytics.png",
                 "NET_Logger.png",
-                "NET_Numerics.png"
+                "NET_Numerics.png",
+                "WhiteStar_Action.png",
+                "WhiteStar_Alert.png",
+                "WhiteStar_Clink.png",
+                "WhiteStar_Find.png",
+                "WhiteStar_Sign.png",
+                "WhiteStar_Squash.png",
+                "Audiosoft Tuner"
             };
 
             for (int i = 0; i < names.Length; i++)

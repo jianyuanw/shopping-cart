@@ -97,7 +97,7 @@ namespace SA51_CA_Project_Team10.Controllers
         }
 
         [HttpPost]
-        public IActionResult addCart(int productId) {
+        public IActionResult AddCart(int productId) {
             if (HttpContext.Request.Cookies["sessionId"] != null && verify.VerifySession(HttpContext.Request.Cookies["sessionId"], _db))
             {
                 int userid = _db.Sessions.Where(x => x.Id == HttpContext.Request.Cookies["sessionId"]).ToList()[0].UserId;
