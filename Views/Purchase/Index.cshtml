@@ -2,8 +2,6 @@
 
 @{
     ViewData["Title"] = "My Purchases";
-
-
 }
 
 <style>
@@ -40,16 +38,16 @@
                 </td>
                 <td class="border border-dark">
                     <table>
-                        <tr><td class="p-1 font-weight-bold">Purchased On:</td><td class="p-1">@group.DateTime.ToString("d MMM yyyy")</td></tr>
-                        <tr><td class="p-1 font-weight-bold">Quantity:</td><td class="p-1">@group.Count</td></tr>
-                        @if (group.Count == 1) // If quantity == 1, insert activation code as normal text
+                        <tr><td class="p-1 font-weight-bold">Purchased On:</td><td class="p-1">@group.OrderDate.ToString("d MMM yyyy")</td></tr>
+                        <tr><td class="p-1 font-weight-bold">Quantity:</td><td class="p-1">@group.Quantity</td></tr>
+                        @if (group.Quantity == 1) // If quantity == 1, insert activation code as normal text
                         {
                             @foreach (var item in group.Ids)
                             {
                                 <tr><td class="p-1 font-weight-bold">Activation Code:</td><td class="p-1">@item</td></tr>
                             }
                         }
-                        else if (group.Count > 1) // If quantity > 1, insert activation codes in dropdown menu
+                        else if (group.Quantity > 1) // If quantity > 1, insert activation codes in dropdown menu
                         {
                             <tr>
                                 <td class="p-1 font-weight-bold">Activation Code:</td>
@@ -70,26 +68,3 @@
         }
     </table>
 </div>
-
-
-@* Backup
-<table>
-    <tr>
-        <td class="border border-dark">
-            <table>
-                <tr><td class="p-1 text-center"><img src="~/images/software/NET_Charts.png" class="border border-dark product-image" /></td></tr>
-                <tr><td class="p-1 text-center font-weight-bold">OrderDetails.Product.Name</td></tr>
-                <tr><td class="p-1 text-center">OrderDetails.Product.Description</td></tr>
-                <tr><td class="p-1 text-center"><button type="button" class="btn btn-outline-dark btn-sm">Download</button></td></tr>
-            </table>
-        </td>
-        <td class="border border-dark">
-            <table>
-                <tr><td class="p-1 font-weight-bold">Purchased On:</td><td class="p-1">OrderDetails.Order.DateTime</td></tr>
-                <tr><td class="p-1 font-weight-bold">Quantity:</td><td class="p-1">To be done...</td></tr>
-                <tr><td class="p-1 font-weight-bold">Activation Code:</td><td class="p-1">OrderDetails.Id</td></tr>
-            </table>
-        </td>
-    </tr>
-    <tr><td class="row-spacer"></td></tr>
-</table>*@

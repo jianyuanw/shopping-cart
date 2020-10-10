@@ -35,11 +35,10 @@ namespace SA51_CA_Project_Team10.Controllers
 
                 // Retrieve OrderDetails, Orders, Products from DB
                 List<OrderDetail> orderDetails = _db.OrderDetails.ToList();
-                List<Order> orders = _db.Orders.ToList();
-                List<Product> products = _db.Products.ToList();
 
                 // Join lists. Filter based on UserId. Order by date. Select relevant columns.
                 var purchases = orderDetails.OrderByDescending(od => od.Order.DateTime)
+                                            .Where(od => od.Order.UserId == user.Id)
                                             .Select(od => new { od.Product.ImageLink, od.Product.Name, od.Product.Description, od.Order.DateTime, od.Id })
                                             .GroupBy(d => new { d.ImageLink, d.Name, d.Description, d.DateTime }).ToList();
 
@@ -58,8 +57,8 @@ namespace SA51_CA_Project_Team10.Controllers
                             COD.ImageLink = item.ImageLink;
                             COD.Name = item.Name;
                             COD.Description = item.Description;
-                            COD.DateTime = item.DateTime;
-                            COD.Count = group.Count();
+                            COD.OrderDate = item.DateTime;
+                            COD.Quantity = group.Count();
                             product = true;
                         }
                         list.Add(item.Id);
@@ -67,8 +66,6 @@ namespace SA51_CA_Project_Team10.Controllers
                     COD.Ids = list;
                     model._products.Add(COD);
                 }
-
-
 
                 // Bold menu item
                 ViewData["Is_Purchase"] = "font-weight: bold";
