@@ -34,7 +34,7 @@ namespace SA51_CA_Project_Team10.Controllers
 
                 //retrieve product number labeled beside icon
                 List<Cart> carts = _db.Carts.Where(x => x.UserId == user.Id).ToList();
-                ViewData["cart_quantity"] = carts.Count;
+                ViewData["cart_quantity"] = carts.Sum(cart => cart.Quantity);
             }      
             else{  //tentative cart
                 string cartCookie = HttpContext.Request.Cookies["guestCart"];
