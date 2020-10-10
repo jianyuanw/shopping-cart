@@ -1,20 +1,80 @@
-﻿
+﻿@section Scripts
+{
+    <script src="~/js/gallery.js"></script>
+}
 @{
     ViewData["Title"] = "Libraries Gallery";
     List<Product> products = (List<Product>)ViewData["Products"];
 
-    int column = 3, row = 4, page = 1;
+    int column = 3, row = 4, page = (int)ViewData["Page"] == 0 ? 1 : (int)ViewData["Page"];
+    int ppage, npage;
+
+    int productListlen = products.Count;
+
+        //showing is what be showed on webpage
     List<Product> showing = new List<Product>();
+
+    for (int i = (page - 1) * column * row; i < page * column * row && i < productListlen; ++i)
+        showing.Add(products[i]);
+
+    //pagination is how many page to show products
+    int pagination = productListlen / (column * row);
+    if (productListlen % (column * row) != 0) ++pagination;
+
+    //judge over bound
+    if (page < 1) page = 1;
+    if (page > pagination) page = pagination;
+
+    //next page and precede page
+    ppage = page - 1 < 1 ? 1 : page - 1;
+    npage = page + 1 > pagination ? pagination : page + 1;
+
+}
+
+<div style="text-align:center">
+    <form class="inlinef" action="/Gallery/SearchAction" method="post">
+        <input style="font-size:30px" size="35" type="text"  id="searchbar" name="searchbar" value="@ViewData["searchbar"]" placeholder="Search.." />
+        <button style="font-size:30px; float:right;" type="submit">Go</button>
+    </form>
+</div>
     
-}
-
-@if (ViewData["Message"] != null)
-{
-    <div class="alert alert-info" role="alert">
-        @ViewData["Message"]
-    </div>
-}
-
-@foreach (Product p in products) { 
-    <p>@p.Id @p.Name @p.Price @p.ImageLink @p.Description   </p>
-}
+<table class="gallery" style="border-spacing: 20px 20px; border-collapse: separate;" border="0">
+    @for (int i = 0; i < showing.Count; i += column)
+    {
+        <tr>
+            @for (int j = i; j < i + column && j < showing.Count; ++j)
+            {
+                string url = showing[j].ImageLink.StartsWith("~") ? showing[j].ImageLink.Substring(1) : showing[j].ImageLink;
+                <td class="galleryTtd" style="border: 2px solid black">
+                    <div>
+                        <img src="@url" width="75" />
+                        <h2>@showing[j].Name</h2>
+                        <p>@showing[j].Description</p>
+                        <button class="productbtn" type="button" productId="@showing[j].Id">$@showing[j].Price - Add To Cart</button><br />
+                    </div>
+                </td>
+            }
+        </tr>
+    }
+</table>
+<div align="center">
+    <form class="inlinef" action="/Gallery/ToPage" method="post">
+        <button type="submit" name="toPage" value="@ppage"><<</button>
+    </form>
+    @for (int i = 1; i <= pagination; ++i)
+    {
+        if (i == page)
+        {
+            <button class="activePage">@i</button>
+        }
+        else
+        {
+            <form class="inlinef" action="/Gallery/ToPage" method="post">
+                <button type="submit" class="nonactivePage" name="toPage" value="@i">@i</button>
+            </form>
+        }
+    }
+    <form class="inlinef" action="/Gallery/ToPage" method="post">
+        <button type="submit" name="toPage" value="@npage">>></button>
+    </form>
+</div>

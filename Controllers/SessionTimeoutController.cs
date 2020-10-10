@@ -8,10 +8,11 @@ using SA51_CA_Project_Team10.Models;
 
 namespace SA51_CA_Project_Team10.Controllers
 {
-    public class LogoutController : Controller
+    public class SessionTimeoutController : Controller
     {
         private readonly DbT10Software _db;
-        public LogoutController(DbT10Software db)
+
+        public SessionTimeoutController(DbT10Software db)
         {
             _db = db;
         }
@@ -27,7 +28,7 @@ namespace SA51_CA_Project_Team10.Controllers
 
             HttpContext.Response.Cookies.Delete("sessionId");
 
-            TempData["Alert"] = "primary|Successfully logged out!";
+            TempData["Alert"] = "warning|Your session has timed-out!";
             return Redirect("/Gallery/Index");
         }
     }

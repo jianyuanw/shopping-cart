@@ -43,6 +43,7 @@ namespace SA51_CA_Project_Team10.DBs
             _db.SaveChanges();
         }
 
+
         private void CreateProducts()
         {
             
@@ -61,10 +62,10 @@ namespace SA51_CA_Project_Team10.DBs
             {
                 "NET_Charts.png",
                 "NET_PayPal.png",
-                "NET_ML",
-                "NET_Analytics",
-                "NET_Logger",
-                "NET_Numerics"
+                "NET_ML.png",
+                "NET_Analytics.png",
+                "NET_Logger.png",
+                "NET_Numerics.png"
             };
 
             for (int i = 0; i < names.Length; i++)

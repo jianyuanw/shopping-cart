@@ -1,0 +1,47 @@
+﻿/* To highlight selected item on the application menu */
+
+.gallery {
+    margin: 0 auto;
+    text-align: center;
+}
+.galleryTtd {
+    background-color: #CCE8EB;
+}
+.activePage {
+    font-weight: bold;
+}
+.inlinef {
+   display:inline-block;
+}
+#container {
+    width: 500px;
+    height: 820px;
+    margin: 0 auto;
+}
+div.search {
+    padding: 30px 0;
+}
+.bar1 {
+    background: #A3D0C3;
+}
+
+.bar1 input {
+    border: 2px solid #7BA7AB;
+    border-radius: 5px;
+    background: #F9F0DA;
+    color: #9E9C9C;
+}
+
+.bar1 button {
+    top: 0;
+    right: 0;
+    background: #7BA7AB;
+    border-radius: 0 5px 5px 0;
+}
+
+.bar1 button:before {
+    content: "\f002";
+    font-family: FontAwesome;
+    font-size: 16px;
+    color: #F9F0DA;
+}
