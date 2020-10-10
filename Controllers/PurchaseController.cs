@@ -17,12 +17,12 @@ namespace SA51_CA_Project_Team10.Controllers
             _db = db;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(Verify v)
         {
             // Retrieve session
-            Session session = _db.Sessions.FirstOrDefault(x => x.Id == Request.Cookies["sessionId"]);
+            string sessionId = Request.Cookies["sessionId"];
 
-            if (session != null) // If session exists, means user is logged in.
+            if (v.VerifySession(sessionId, _db)) // If session exists, means user is logged in.
             {
                 // Logout button
                 ViewData["Logged"] = true;

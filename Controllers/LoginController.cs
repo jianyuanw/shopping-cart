@@ -13,17 +13,15 @@ namespace SA51_CA_Project_Team10.Controllers
     public class LoginController : Controller
     {
         private readonly DbT10Software _db;
-        private readonly Verify _verify;
 
-        public LoginController(DbT10Software db, Verify v)
+        public LoginController(DbT10Software db)
         {
             _db = db;
-            _verify = v;
         }
-        public IActionResult Index()
+        public IActionResult Index(Verify v)
         {
             string sessionId = HttpContext.Request.Cookies["sessionId"];
-            if (sessionId != null && _verify.VerifySession(sessionId, _db))
+            if (v.VerifySession(sessionId, _db))
             {
                 TempData["Alert"] = "primary|Already logged in!";
                 return Redirect("/Gallery/Index");

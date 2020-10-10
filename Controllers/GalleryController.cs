@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Castle.Core.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using SA51_CA_Project_Team10.DBs;
@@ -23,7 +24,7 @@ namespace SA51_CA_Project_Team10.Controllers
         {
 
             //validate session
-            if (HttpContext.Request.Cookies["sessionId"] != null && verify.VerifySession(HttpContext.Request.Cookies["sessionId"], _db))
+            if (verify.VerifySession(HttpContext.Request.Cookies["sessionId"], _db))
             {
                 ViewData["Logged"] = true;
                 int userId = _db.Sessions.Where(x => x.Id == HttpContext.Request.Cookies["sessionId"]).ToList()[0].UserId;
@@ -50,20 +51,23 @@ namespace SA51_CA_Project_Team10.Controllers
                 }
             }
 
+            string searchBar = HttpContext.Request.Cookies["searchbar"];
+            List<Product> products = new List<Product>();
+
             //searchbar logic & retrieve products list and pass to view
-            if (HttpContext.Request.Cookies["searchbar"] == null || HttpContext.Request.Cookies["searchbar"] == "")
+            if (searchBar.IsNullOrEmpty())
             {
-                List<Product> products = _db.Products.ToList();
-                ViewData["Products"] = products;
-                ViewData["Page"] = page;
-            }
-            else {
-                string searchbar = HttpContext.Request.Cookies["searchbar"];
-                List<Product> products = _db.Products.Where(x => x.Name.Contains(searchbar)).ToList();
-                ViewData["Products"] = products;
-                ViewData["Page"] = page;
-            }
-            ViewData["searchbar"] = HttpContext.Request.Cookies["searchbar"];
+                products = _db.Products.OrderBy(x => x.Name).ToList();
+            } else
+            {
+                products = _db.Products.Where(x => x.Name.Contains(searchBar)).OrderBy(x => x.Name).ToList();
+            }                
+            
+
+            ViewData["Products"] = products;
+            ViewData["Page"] = page;
+
+            ViewData["searchbar"] = searchBar;
 
             //bold navbar 
             ViewData["Is_Gallery"] = "font-weight: bold";
@@ -82,7 +86,7 @@ namespace SA51_CA_Project_Team10.Controllers
 
         [HttpPost]
         public IActionResult SearchAction(int toPage, string searchbar) {
-            if (searchbar == null || searchbar == "") {
+            if (searchbar.IsNullOrEmpty()) {
                 HttpContext.Response.Cookies.Delete("searchbar");
             }
             else {
@@ -98,7 +102,7 @@ namespace SA51_CA_Project_Team10.Controllers
 
         [HttpPost]
         public IActionResult AddCart(int productId) {
-            if (HttpContext.Request.Cookies["sessionId"] != null && verify.VerifySession(HttpContext.Request.Cookies["sessionId"], _db))
+            if (verify.VerifySession(HttpContext.Request.Cookies["sessionId"], _db))
             {
                 int userid = _db.Sessions.Where(x => x.Id == HttpContext.Request.Cookies["sessionId"]).ToList()[0].UserId;
                 List<Cart> cart = _db.Carts.Where(x => x.UserId == userid && x.ProductId == productId).ToList();

@@ -11,18 +11,16 @@ namespace SA51_CA_Project_Team10.Controllers
     public class CartController : Controller
     {
         private readonly DbT10Software _db;
-        private readonly Verify verify;
 
-        public CartController (DbT10Software _db, Verify verify)
+        public CartController (DbT10Software _db)
         {
             this._db = _db;
-            this.verify = verify;
         }
-        public IActionResult Index()
+        public IActionResult Index(Verify v)
         {
 
             //validate session 
-            if (HttpContext.Request.Cookies["sessionId"] != null && verify.VerifySession(HttpContext.Request.Cookies["sessionId"], _db))
+            if (v.VerifySession(HttpContext.Request.Cookies["sessionId"], _db))
             {
                 ViewData["Logged"] = true;
                 int userId = _db.Sessions.Where(x => x.Id == HttpContext.Request.Cookies["sessionId"]).ToList()[0].UserId;
