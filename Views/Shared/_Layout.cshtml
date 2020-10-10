@@ -110,8 +110,9 @@
         <main role="main" class="pb-3">
             @if (TempData["Alert"] != null)
             {
-                <div class="alert alert-@alert[0]" role="alert">
+                <div class="alert alert-@alert[0] fade show" role="alert">
                     @alert[1]
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
                 </div>
             }
             @RenderBody()
