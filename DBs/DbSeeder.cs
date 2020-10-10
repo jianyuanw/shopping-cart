@@ -52,19 +52,19 @@ namespace SA51_CA_Project_Team10.DBs
                                "Audiosoft Tuner"};
             string[] descriptions =
             {
-                "Brings powerful charting capabilities to your .NET applications",
+                "Brings powerful charting capabilities to your .NET applications.",
                 "Integrate your .NET apps with PayPal the easy way!",
                 "Supercharged .NET machine learning libraries.",
-                "Performs data mining and analytics easily in .NET",
+                "Performs data mining and analytics easily in .NET.",
                 "Logs and aggregates events easily in your .NET apps.",
-                "Powerful numerical methods for your .NET simulations",
+                "Powerful numerical methods for your .NET simulations.",
                 "All your video editing needs in one app!",
                 "Never miss a deadline or event again.",
-                "Organize business meetings within a clink",
-                "Finds and tracks all your inventory",
-                "Documents and stores all digitally signed documents",
+                "Organize business meetings within a clink.",
+                "Finds and tracks all your inventory.",
+                "Documents and stores all digitally signed documents.",
                 "Keep your computer safe from malware and viruses!",
-                "Parses audio of off-tune instruments and digitally tunes them"
+                "Parses audio of off-tune instruments and digitally tunes them."
             };
             int[] prices = { 99, 69, 299, 299, 49, 199, 65, 15, 35, 55, 25, 45, 35 };
             string[] imagelinks =
@@ -81,7 +81,7 @@ namespace SA51_CA_Project_Team10.DBs
                 "WhiteStar_Find.png",
                 "WhiteStar_Sign.png",
                 "WhiteStar_Squash.png",
-                "Audiosoft Tuner"
+                "Audiosoft_Tuner.png"
             };
 
             for (int i = 0; i < names.Length; i++)
