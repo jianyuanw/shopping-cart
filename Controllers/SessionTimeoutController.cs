@@ -28,7 +28,7 @@ namespace SA51_CA_Project_Team10.Controllers
 
             HttpContext.Response.Cookies.Delete("sessionId");
 
-            TempData["Alert"] = "primary|Your session has timed-out!";
+            TempData["Alert"] = "warning|Your session has timed-out!";
             return Redirect("/Gallery/Index");
         }
     }

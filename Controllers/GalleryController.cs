@@ -137,10 +137,10 @@ namespace SA51_CA_Project_Team10.Controllers
                 });
             }
 
-            return Json(new
-            {
-                success = false
-            });
+            //return Json(new
+            //{
+                //success = false
+           // });
         }
     }
 }
