@@ -22,32 +22,63 @@ namespace SA51_CA_Project_Team10.Controllers
             // Retrieve session
             Session session = _db.Sessions.FirstOrDefault(x => x.Id == Request.Cookies["sessionId"]);
 
-            // If session exists, means user is logged in.
-            if (session != null)
+            if (session != null) // If session exists, means user is logged in.
             {
                 // Logout button
                 ViewData["Logged"] = true;
+
+                // Bold menu item
+                ViewData["Is_Purchase"] = "font-weight: bold";
 
                 User user = _db.Users.FirstOrDefault(x => x.Id == session.UserId);
 
                 // Display username at top left
                 ViewData["Username"] = user.Username;
 
-                // Retrieve OrderDetails, Orders, Products from DB
+                // Retrieve OrderDetails from DB
                 List<OrderDetail> orderDetails = _db.OrderDetails.ToList();
-                List<Order> orders = _db.Orders.ToList();
-                List<Product> products = _db.Products.ToList();
 
-                // Pass to View
-                ViewData["orderDetails"] = orderDetails;
-                ViewData["orders"] = orders;
-                ViewData["products"] = products;
-                ViewData["user"] = user;
+                // Filter based on UserId. Order by date. Select and group by relevant columns.
+                var purchases = orderDetails.OrderByDescending(od => od.Order.DateTime)
+                                            .Where(od => od.Order.UserId == user.Id)
+                                            .Select(od => new { od.Product.ImageLink, od.Product.Name, od.Product.Description, od.Order.DateTime, od.Id })
+                                            .GroupBy(d => new { d.ImageLink, d.Name, d.Description, d.DateTime }).ToList();
 
-                // Bold menu item
-                ViewData["Is_Purchase"] = "font-weight: bold";
+                if (purchases.Count == 0) // If no purchases, send info to View to display "no past purchases"
+                {
+                    ViewData["havePastOrders"] = false;
 
-                return View();
+                    return View();
+                }
+
+                ViewData["havePastOrders"] = true;
+
+                var model = new PurchasesViewModel();
+
+                foreach (var group in purchases)
+                {
+                    bool product = false;
+                    var list = new List<string>();
+                    var COD = new ConciseOrderDetail();
+                    
+                    foreach (var item in group)
+                    {
+                        if (!product)
+                        {                            
+                            COD.ImageLink = item.ImageLink;
+                            COD.Name = item.Name;
+                            COD.Description = item.Description;
+                            COD.OrderDate = item.DateTime;
+                            COD.Quantity = group.Count();
+                            product = true;
+                        }
+                        list.Add(item.Id);
+                    }
+                    COD.Ids = list;
+                    model._products.Add(COD);
+                }
+
+                return View(model);
             }
             else // Else user is not logged in. Redirect to login page.
             {

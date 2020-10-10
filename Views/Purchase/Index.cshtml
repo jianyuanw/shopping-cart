@@ -1,24 +1,8 @@
-﻿
+﻿@model PurchasesViewModel
+
 @{
     ViewData["Title"] = "My Purchases";
-
-    // Retrieve data from controller
-    List<OrderDetail> orderDetails = (List<OrderDetail>)ViewData["orderDetails"];
-    List<Order> orders = (List<Order>)ViewData["orders"];
-    List<Product> products = (List<Product>)ViewData["products"];
-    User user = (User)ViewData["user"];
-
-    // Join lists. Filter based on UserId. Order by date. Select relevant columns.
-    var data = from od in orderDetails
-               join o in orders on od.OrderId equals o.Id
-               join p in products on od.ProductId equals p.Id
-               where o.UserId == user.Id
-               orderby o.DateTime descending
-               select new { p.ImageLink, p.Name, p.Description, o.DateTime, od.Id };
-
-    // Group by date & product --> to derive quantity using Group.Count()
-    var purchases = from d in data
-                    group d by new { d.ImageLink, d.Name, d.Description, d.DateTime };
+    bool havePastOrders = (bool)ViewData["havePastOrders"];
 }
 
 <style>
@@ -40,71 +24,55 @@
     }
 </style>
 
-<div class="d-flex justify-content-center">
-    <table>
-        @foreach (var group in purchases) // Loop through each group
-        {
-            <tr>
-                <td class="border border-dark product-cell">
-                    <table class="w-100">
-                        <tr><td class="p-1 text-center w-100"><img src="@group.Key.ImageLink" class="border border-dark product-image" /></td></tr>
-                        <tr><td class="p-1 text-center font-weight-bold">@group.Key.Name</td></tr>
-                        <tr><td class="p-1 text-center">@group.Key.Description</td></tr>
-                        <tr><td class="p-1 text-center"><button type="button" class="btn btn-outline-dark btn-sm">Download</button></td></tr>
-                    </table>
-                </td>
-                <td class="border border-dark">
-                    <table>
-                        <tr><td class="p-1 font-weight-bold">Purchased On:</td><td class="p-1">@group.Key.DateTime.ToString("d MMM yyyy")</td></tr>
-                        <tr><td class="p-1 font-weight-bold">Quantity:</td><td class="p-1">@group.Count()</td></tr>
-                        @if (group.Count() == 1) // If quantity == 1, insert activation code as normal text
-                        {
-                            @foreach (var item in group)
+@if (havePastOrders)
+{
+    <div class="d-flex justify-content-center">
+        <table>
+            @foreach (var group in Model._products) // Loop through each group
+            {
+                <tr>
+                    <td class="border border-dark product-cell">
+                        <table class="w-100">
+                            <tr><td class="p-1 text-center w-100"><img src="@group.ImageLink.Substring(1)" class="border border-dark product-image" /></td></tr>
+                            <tr><td class="p-1 text-center font-weight-bold">@group.Name</td></tr>
+                            <tr><td class="p-1 text-center">@group.Description</td></tr>
+                            <tr><td class="p-1 text-center"><button type="button" class="btn btn-outline-dark btn-sm">Download</button></td></tr>
+                        </table>
+                    </td>
+                    <td class="border border-dark">
+                        <table>
+                            <tr><td class="p-1 font-weight-bold">Purchased On:</td><td class="p-1">@group.OrderDate.ToString("d MMM yyyy")</td></tr>
+                            <tr><td class="p-1 font-weight-bold">Quantity:</td><td class="p-1">@group.Quantity</td></tr>
+                            @if (group.Quantity == 1) // If quantity == 1, insert activation code as normal text
                             {
-                                <tr><td class="p-1 font-weight-bold">Activation Code:</td><td class="p-1">@item.Id</td></tr>
+                                @foreach (var item in group.Ids)
+                                {
+                                    <tr><td class="p-1 font-weight-bold">Activation Code:</td><td class="p-1">@item</td></tr>
+                                }
                             }
-                        }
-                        else if (group.Count() > 1) // If quantity > 1, insert activation codes in dropdown menu
-                        {
-                            <tr>
-                                <td class="p-1 font-weight-bold">Activation Code:</td>
-                                <td class="p-1">
-                                    <select class="custom-select custom-select-sm">
-                                        @foreach (var item in group)
-                                        {
-                                            <option>@item.Id</option>
-                                        }
-                                    </select>
-                                </td>
-                            </tr>
-                        }
-                    </table>
-                </td>
-            </tr>
-            <tr><td class="row-spacer"></td></tr>
-        }
-    </table>
-</div>
-
-
-@* Backup
-<table>
-    <tr>
-        <td class="border border-dark">
-            <table>
-                <tr><td class="p-1 text-center"><img src="~/images/software/NET_Charts.png" class="border border-dark product-image" /></td></tr>
-                <tr><td class="p-1 text-center font-weight-bold">OrderDetails.Product.Name</td></tr>
-                <tr><td class="p-1 text-center">OrderDetails.Product.Description</td></tr>
-                <tr><td class="p-1 text-center"><button type="button" class="btn btn-outline-dark btn-sm">Download</button></td></tr>
-            </table>
-        </td>
-        <td class="border border-dark">
-            <table>
-                <tr><td class="p-1 font-weight-bold">Purchased On:</td><td class="p-1">OrderDetails.Order.DateTime</td></tr>
-                <tr><td class="p-1 font-weight-bold">Quantity:</td><td class="p-1">To be done...</td></tr>
-                <tr><td class="p-1 font-weight-bold">Activation Code:</td><td class="p-1">OrderDetails.Id</td></tr>
-            </table>
-        </td>
-    </tr>
-    <tr><td class="row-spacer"></td></tr>
-</table>*@
+                            else if (group.Quantity > 1) // If quantity > 1, insert activation codes in dropdown menu
+                            {
+                                <tr>
+                                    <td class="p-1 font-weight-bold">Activation Code:</td>
+                                    <td class="p-1">
+                                        <select class="custom-select custom-select-sm">
+                                            @foreach (var item in group.Ids)
+                                            {
+                                                <option>@item</option>
+                                            }
+                                        </select>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </td>
+                </tr>
+                <tr><td class="row-spacer"></td></tr>
+            }
+        </table>
+    </div>
+}
+else
+{
+    <h4>You have no past purchases.</h4>
+}
