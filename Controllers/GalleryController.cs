@@ -24,11 +24,12 @@ namespace SA51_CA_Project_Team10.Controllers
         public IActionResult Index(string search, int page = 1)
         {
             string sessionId = HttpContext.Request.Cookies["sessionId"];
+            User user = null;
             //validate session
             if (_v.VerifySession(sessionId, _db))
             {
                 ViewData["Logged"] = true;
-                User user = _db.Sessions.FirstOrDefault(x => x.Id == sessionId).User;
+                user = _db.Sessions.FirstOrDefault(x => x.Id == sessionId).User;
 
                 ViewData["Username"] = user.Username;
 
@@ -36,7 +37,8 @@ namespace SA51_CA_Project_Team10.Controllers
                 List<Cart> carts = _db.Carts.Where(x => x.UserId == user.Id).ToList();
                 ViewData["cart_quantity"] = carts.Sum(cart => cart.Quantity);
             }      
-            else{  //tentative cart
+            else{  
+                //tentative cart
                 string cartCookie = HttpContext.Request.Cookies["guestCart"];
                 if (cartCookie == null)
                 {
@@ -59,7 +61,7 @@ namespace SA51_CA_Project_Team10.Controllers
                 products = _db.Products.Where(x => x.Name.Contains(search)).OrderBy(x => x.Name).ToList();
             }
 
-            var galleryView = new GalleryViewModel(page, products);
+            var galleryView = new GalleryViewModel(user, page, products);
 
             ViewData["searchbar"] = search;
 
@@ -107,6 +109,39 @@ namespace SA51_CA_Project_Team10.Controllers
                 return Json(new
                 {
                     success = true
+                });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult Rate(int rating, int productId)
+        {
+            string sessionId = HttpContext.Request.Cookies["sessionId"];
+
+            if (_v.VerifySession(sessionId, _db))
+            {
+                User user = _db.Sessions.FirstOrDefault(session => session.Id == sessionId).User;
+                _db.Ratings.Add(new Rating
+                {
+                    UserId = user.Id,
+                    ProductId = productId,
+                    Score = rating
+                });
+                _db.SaveChanges();
+
+                return Json(new
+                {
+                    success = true,
+                    newAverage = _db.Products.FirstOrDefault(product => product.Id == productId).Ratings.Average(rating => rating.Score)
+                });
+            }
+            else
+            {
+                TempData["Alert"] = "primary|Please log in to rate products.";
+                return Json(new
+                {
+                    success = false,
+                    redirect = "/Login/Index"
                 });
             }
         }

@@ -12,7 +12,7 @@ namespace SA51_CA_Project_Team10.Models
         public int Score { get; set; }
         public int UserId { get; set; } 
         public virtual User User { get; set; }
-        public int ProductID { get; set; }
+        public int ProductId { get; set; }
         public virtual Product Product { get; set; }
 
     }

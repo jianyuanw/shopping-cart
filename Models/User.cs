@@ -15,5 +15,6 @@ namespace SA51_CA_Project_Team10.Models
         public string Password { get; set; }
         [Required, MaxLength(50)]
         public string Salt { get; set; }
+        public virtual ICollection<Rating> Ratings { get; set; }
     }
 }

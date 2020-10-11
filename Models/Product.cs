@@ -16,5 +16,6 @@ namespace SA51_CA_Project_Team10.Models
         [Required]
         public int Price { get; set; }
         public string ImageLink { get; set; }
+        public virtual ICollection<Rating> Ratings { get; set; }
     }
 }

@@ -210,7 +210,7 @@ namespace SA51_CA_Project_Team10.DBs
                 {
                     Score = r.Next(1, 6),
                     UserId = r.Next(1, numOfUsers + 1),
-                    ProductID = r.Next(1, numOfProducts + 1)
+                    ProductId = r.Next(1, numOfProducts + 1)
                 };
 
                 _db.Ratings.Add(rating);
