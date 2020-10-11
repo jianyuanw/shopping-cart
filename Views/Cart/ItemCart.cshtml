@@ -12,7 +12,10 @@
     string[] quantityID = new string[types];
     string[] totalID = new string[types];
 
+    // double totalAmount = 0;
+
 }
+
 
 <style>
     .center_div{
@@ -72,7 +75,7 @@
         color: white;
         border: none;
         width: 120pt;
-        height: 20pt;
+        height: 24pt;
         font-size: 14pt;
         text-align:center;
         vertical-align:central;
@@ -94,7 +97,7 @@
 
 <div class="center_div" id="CartPageTable">
     <h2>    Cart</h2>
-    <table class="cart_table">
+    <table class="cart_table" id="cart_table">
         <thead>
             <tr>
                 <td>Product</td>
@@ -118,6 +121,10 @@
                 quantityID[itemIndex] = "quantityID" + itemIndex;
                 totalID[itemIndex] = "totalID" + itemIndex;
 
+                //double subTotal = itemsInCart[itemIndex].Product.Price * itemsInCart[itemIndex].Quantity;
+                //totalAmount += subTotal;
+                //string subTotalFormatting = $"$ {subTotal:0.00}";
+
                 <tr>
                     <td><img src=@url class="cart_item_photo" /></td>
                     <td><span>@itemsInCart[itemIndex].Product.Name</span></td>
@@ -127,7 +134,7 @@
                         <span id=@quantityID[itemIndex]>@itemsInCart[itemIndex].Quantity</span>
                         <button class="cart_action_buttons" id=@addQuantityButtonID[itemIndex]><img src="/images/addSymbol.png"></button>
                     </td>
-                    <td><span id=@totalID[itemIndex]>later do</span></td>
+                    <td>$ <span id=@totalID[itemIndex]></span></td>
                     <td><button class="cart_action_buttons" id=@deleteItemButtonID[itemIndex]><img src="/images/deleteSymbol.png"></button></td>
                 </tr>
             }
@@ -137,7 +144,10 @@
     <table class="counter_table">
         <tr></tr>
         <tr>
-            <td>Total: <span>(later..)</span></td>
+            @{ 
+                //string totalAmountFormatting = $"$ {totalAmount:0.00}";
+            }
+            <td>Total: $ <span id="all_total"></span></td>
         </tr>
         <tr>
             <td><button class="cart_check_out_button" id="checkoutButton">CheckOut</button></td>
@@ -145,3 +155,5 @@
         <tr></tr>
     </table>
 </div>
+
+<script type="text/javascript" src="~/js/ItemCart.js"></script>
