@@ -25,13 +25,13 @@ namespace SA51_CA_Project_Team10.Middlewares
         public async Task Invoke(HttpContext context)
         {
             // check and get exisiting user lastaccesstime
-            string lastAccess = context.Session.GetString("lastAccessTime");
+            string lastAccess = context.Request.Cookies["lastAccessTime"];
 
             // Check if lastAccessTime session object is available
             if (lastAccess == null)
             {
                 // When lastAccessTime is null, it is a new session
-                context.Session.SetString("lastAccessTime", DateTime.Now.ToString());
+                context.Response.Cookies.Append("lastAccessTime", DateTime.Now.ToString());
 
             } else
             {
@@ -43,7 +43,7 @@ namespace SA51_CA_Project_Team10.Middlewares
                 {
                     //if user not active, remove the last accesstime and redirect to session timeout controller
                     //controller will clean up session and redirect to gallery page with session timeout message
-                    context.Session.Remove("lastAccessTime");
+                    context.Response.Cookies.Delete("lastAccessTime");
                     context.Response.Redirect("/SessionTimeout/Index");
 
                     return;
@@ -51,7 +51,7 @@ namespace SA51_CA_Project_Team10.Middlewares
                 else
                 {
                     // if user still activ, keep Update last access time stamp
-                    context.Session.SetString("lastAccessTime", DateTime.Now.ToString());
+                    context.Response.Cookies.Append("lastAccessTime", DateTime.Now.ToString());
                 }
             }
               
