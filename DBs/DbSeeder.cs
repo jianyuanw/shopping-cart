@@ -25,6 +25,7 @@ namespace SA51_CA_Project_Team10.DBs
             CreateProducts();
             CreateCarts();
             CreateOrders(10);
+            CreateRatings(100);
         }
 
         private void CreateUsers()
@@ -197,6 +198,25 @@ namespace SA51_CA_Project_Team10.DBs
             return salt;
         }
         
-        
+        public void CreateRatings(int numOfRatingsToGenerate)
+        {
+            int numOfProducts = _db.Products.ToList().Count();
+            int numOfUsers = _db.Users.ToList().Count();
+            Random r = new Random();
+            
+            for (int i = 0; i < numOfRatingsToGenerate; i++)
+            {
+                Rating rating = new Rating
+                {
+                    Score = r.Next(1, 6),
+                    UserId = r.Next(1, numOfUsers + 1),
+                    ProductID = r.Next(1, numOfProducts + 1)
+                };
+
+                _db.Ratings.Add(rating);
+            }
+
+            _db.SaveChanges();
+        }
     }
 }
