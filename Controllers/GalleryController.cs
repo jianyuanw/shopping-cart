@@ -63,34 +63,7 @@ namespace SA51_CA_Project_Team10.Controllers
 
             ViewData["searchbar"] = search;
 
-            //bold navbar 
-            ViewData["Is_Gallery"] = "font-weight: bold";
             return View(galleryView);
-        }
-
-        [HttpPost]
-        public IActionResult ToPage(int page, string search) {
-            return RedirectToRoute(new { 
-                controller = "Gallery",
-                action = "Index",
-                page,
-                search
-            });
-        }
-
-        [HttpPost]
-        public IActionResult SearchAction(int page, string search) {
-            if (search.IsNullOrEmpty()) {
-                return Redirect("/Gallery/Index");
-            }
-
-            return RedirectToRoute(new
-            {
-                controller = "Gallery",
-                action = "Index",
-                page,
-                search
-            });
         }
 
         [HttpPost]

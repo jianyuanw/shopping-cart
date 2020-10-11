@@ -27,9 +27,6 @@ namespace SA51_CA_Project_Team10.Controllers
                 // Logout button
                 ViewData["Logged"] = true;
 
-                // Bold menu item
-                ViewData["Is_Purchase"] = "font-weight: bold";
-
                 User user = _db.Sessions.FirstOrDefault(x => x.Id == sessionId).User;
 
                 // Display username at top left
