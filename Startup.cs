@@ -58,7 +58,7 @@ namespace SA51_CA_Project_Team10
 
             app.UseAuthorization();
 
-            app.UseSession();
+            //app.UseSession();
 
             app.UseMiddleware<SessionKeeper>();
 
