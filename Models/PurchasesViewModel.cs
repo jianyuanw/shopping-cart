@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 
 namespace SA51_CA_Project_Team10.Models
 {
-    // There is likely an easier way to implement this with proper usage of method syntax
     public class PurchasesViewModel
     {
         public DateTime DateTime { get; set; }

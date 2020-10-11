@@ -15,17 +15,17 @@ namespace SA51_CA_Project_Team10.Controllers
     public class GalleryController : Controller
     {
         private readonly DbT10Software _db;
-        private readonly Verify verify;
+        private readonly Verify _v;
 
-        public GalleryController(DbT10Software _db, Verify verify) {
-            this._db = _db;
-            this.verify = verify;
+        public GalleryController(DbT10Software db, Verify v) {
+            _db = db;
+            _v = v;
         }
-        public IActionResult Index(int page)
+        public IActionResult Index(string search, int page = 1)
         {
             string sessionId = HttpContext.Request.Cookies["sessionId"];
             //validate session
-            if (verify.VerifySession(sessionId, _db))
+            if (_v.VerifySession(sessionId, _db))
             {
                 ViewData["Logged"] = true;
                 User user = _db.Sessions.FirstOrDefault(x => x.Id == sessionId).User;
@@ -48,58 +48,54 @@ namespace SA51_CA_Project_Team10.Controllers
                 }
             }
 
-            string searchBar = HttpContext.Request.Cookies["searchbar"];
             List<Product> products = new List<Product>();
 
             //searchbar logic & retrieve products list and pass to view
-            if (searchBar.IsNullOrEmpty())
+            if (search.IsNullOrEmpty())
             {
                 products = _db.Products.OrderBy(x => x.Name).ToList();
             } else
             {
-                products = _db.Products.Where(x => x.Name.Contains(searchBar)).OrderBy(x => x.Name).ToList();
-            }                
-            
+                products = _db.Products.Where(x => x.Name.Contains(search)).OrderBy(x => x.Name).ToList();
+            }
 
-            ViewData["Products"] = products;
-            ViewData["Page"] = page;
+            var galleryView = new GalleryViewModel(page, products);
 
-            ViewData["searchbar"] = searchBar;
+            ViewData["searchbar"] = search;
 
             //bold navbar 
             ViewData["Is_Gallery"] = "font-weight: bold";
-            return View();
+            return View(galleryView);
         }
 
         [HttpPost]
-        public IActionResult ToPage(int toPage) {
-            Debug.WriteLine(toPage);
+        public IActionResult ToPage(int page, string search) {
             return RedirectToRoute(new { 
                 controller = "Gallery",
                 action = "Index",
-                page = toPage
+                page,
+                search
             });
         }
 
         [HttpPost]
-        public IActionResult SearchAction(int toPage, string searchbar) {
-            if (searchbar.IsNullOrEmpty()) {
-                HttpContext.Response.Cookies.Delete("searchbar");
+        public IActionResult SearchAction(int page, string search) {
+            if (search.IsNullOrEmpty()) {
+                return Redirect("/Gallery/Index");
             }
-            else {
-                HttpContext.Response.Cookies.Append("searchbar", searchbar);
-            }
+
             return RedirectToRoute(new
             {
                 controller = "Gallery",
                 action = "Index",
-                page = toPage
+                page,
+                search
             });
         }
 
         [HttpPost]
         public IActionResult AddCart(int productId) {
-            if (verify.VerifySession(HttpContext.Request.Cookies["sessionId"], _db))
+            if (_v.VerifySession(HttpContext.Request.Cookies["sessionId"], _db))
             {
                 int userid = _db.Sessions.Where(x => x.Id == HttpContext.Request.Cookies["sessionId"]).ToList()[0].UserId;
                 List<Cart> cart = _db.Carts.Where(x => x.UserId == userid && x.ProductId == productId).ToList();
@@ -140,11 +136,6 @@ namespace SA51_CA_Project_Team10.Controllers
                     success = true
                 });
             }
-
-            //return Json(new
-            //{
-                //success = false
-           // });
         }
     }
 }
