@@ -64,31 +64,29 @@ namespace SA51_CA_Project_Team10.Controllers
                 Response.Cookies.Append("sessionId", guid);
                 TempData["Alert"] = "primary|Successfully logged in!";
 
+                foreach (var cart in _db.Carts.Where(cart => cart.UserId == user.Id))
+                {
+                    _db.Carts.Remove(cart);
+                }
+
                 string cartCookie = HttpContext.Request.Cookies["guestCart"];                
                 if (cartCookie != null)
                 {
-                    // Merges guestCart with current cart in account if guestCart exists
+                    // Overwrites current cart in account with guestCart if guestCart exists as per CW's specifications
                     GuestCart guestCart = JsonSerializer.Deserialize<GuestCart>(cartCookie);
                     foreach (var product in guestCart.Products)
                     {
-                        var productInDb = _db.Carts.FirstOrDefault(cart => cart.ProductId == product.ProductId && cart.UserId == user.Id);
-                        if (productInDb != null)
+                        _db.Carts.Add(new Cart
                         {
-                            productInDb.Quantity += product.Quantity;
-                        } else
-                        {
-                            _db.Carts.Add(new Cart
-                            {
-                                ProductId = product.ProductId,
-                                UserId = user.Id,
-                                Quantity = product.Quantity
-                            });
-                        }
+                            ProductId = product.ProductId,
+                            UserId = user.Id,
+                            Quantity = product.Quantity
+                        });
                     }
-                    _db.SaveChanges();
                     HttpContext.Response.Cookies.Delete("guestCart");
-                    TempData["Alert"] += $" {guestCart.Count()} item(s) from your previous cart has been merged into your account cart.";
+                    TempData["Alert"] += $" {guestCart.Count()} item(s) from your previous cart has overwritten your account cart.";
                 }
+                _db.SaveChanges();
             }
             
             if (TempData["Redirect"] != null) 

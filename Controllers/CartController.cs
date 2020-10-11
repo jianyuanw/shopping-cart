@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using SA51_CA_Project_Team10.DBs;
 using SA51_CA_Project_Team10.Models;
@@ -42,18 +43,6 @@ namespace SA51_CA_Project_Team10.Controllers
                 {
                     var guestCart = JsonSerializer.Deserialize<GuestCart>(HttpContext.Request.Cookies["guestCart"]);
                     carts = guestCart.Products;
-                    // implement create List <object> and deliver to ViewData["ItemsInCart"]
-                    // List<Cart> noLoginCart = new List<Cart>();
-
-                    // get productId and merge all same product into List<Cart> noLoginCart
-                    // packed static method in this class below: DeriveNoLoginCartListFromCookie
-                    // noLoginCart = DeriveNoLoginCartListFromCookie(noLoginCart, cart);
-
-                    // implement all information in List<Cart> noLoginCart
-                    // packed static method in this class below: FillingAllInformationOfCartObjectBaseOnProductId
-                    // noLoginCart = FillingAllInformationOfCartObjectBaseOnProductId(noLoginCart);
-
-                    // ViewData["ItemsInCart"] = noLoginCart;
                 }
             }
 
@@ -84,6 +73,48 @@ namespace SA51_CA_Project_Team10.Controllers
 
         }
 
+        public IActionResult Checkout(Hasher h)
+        {
+            string sessionId = HttpContext.Request.Cookies["sessionId"];
+
+            if (_v.VerifySession(sessionId, _db))
+            {
+                User user = _db.Sessions.FirstOrDefault(session => session.Id == sessionId).User;
+                List<Cart> carts = _db.Carts.Where(cart => cart.UserId == user.Id).ToList();
+
+                var order = new Order
+                {
+                    UserId = user.Id,
+                    DateTime = DateTime.Now
+                };
+
+                foreach (Cart c in carts)
+                {
+                    for (int i = 0; i < c.Quantity; i++)
+                    {
+                        var orderDetail = new OrderDetail
+                        {
+                            Id = h.GenerateActivationKey(_db),
+                            Order = order,
+                            ProductId = c.ProductId
+                        };
+                        _db.OrderDetails.Add(orderDetail);
+                    }
+                    _db.Carts.Remove(c);
+                }
+
+                _db.SaveChanges();
+                TempData["Alert"] = "primary|Successful checkout!";
+
+            } else
+            {
+                TempData["Redirect"] = "/Cart/Index";
+                TempData["Alert"] = "danger|Login is required to checkout, please login.";
+                return Redirect("/Login/Index");
+            }
+            return Redirect("/Purchase");
+        }
+
         [HttpPost]
         public JsonResult Update(int productId, int quantity)
         {
@@ -111,6 +142,7 @@ namespace SA51_CA_Project_Team10.Controllers
                     if (product.ProductId == productId)
                     {
                         product.Quantity = quantity;
+                        break;
                     }
                 }
                 HttpContext.Response.Cookies.Append("guestCart", JsonSerializer.Serialize<GuestCart>(guestCart));
@@ -127,40 +159,40 @@ namespace SA51_CA_Project_Team10.Controllers
             });
         }
 
-        /*public static List<Cart> DeriveNoLoginCartListFromCookie(List<Cart> noLoginCart, string[] cart)
+        [HttpPost]
+        public JsonResult Remove(int productId, int row)
         {
-            for (int i = 0; i < cart.Length; i++)
+            string sessionId = HttpContext.Request.Cookies["sessionId"];
+
+            if (_v.VerifySession(sessionId, _db))
             {
-                if (cart[i] != "" && cart[i] != null)
+                User user = _db.Sessions.FirstOrDefault(session => session.Id == sessionId).User;
+                Cart cart = _db.Carts.FirstOrDefault(cart => cart.UserId == user.Id && cart.ProductId == productId);
+
+                _db.Carts.Remove(cart);
+
+                _db.SaveChanges();
+
+            }
+            else
+            {
+                var guestCart = JsonSerializer.Deserialize<GuestCart>(HttpContext.Request.Cookies["guestCart"]);
+                foreach (var product in guestCart.Products)
                 {
-                    int currentCartItem = Convert.ToInt32(cart[i]);
-                    for (int j = 0; j < noLoginCart.Count; j++)
+                    if (product.ProductId == productId)
                     {
-                        if (currentCartItem != noLoginCart[j].ProductId)
-                        {
-                            noLoginCart.Add(new Cart { ProductId = currentCartItem, Quantity = 1 });
-                        }
-                        else if (currentCartItem == noLoginCart[j].ProductId)
-                        {
-                            noLoginCart[j].Quantity += 1;
-                        }
+                        guestCart.Products.Remove(product);
+                        break;
                     }
                 }
+                HttpContext.Response.Cookies.Append("guestCart", JsonSerializer.Serialize<GuestCart>(guestCart));
             }
 
-            return noLoginCart;
-        }
-
-        public static List<Cart> FillingAllInformationOfCartObjectBaseOnProductId(List<Cart> noLoginCart)
-        {
-            for(int i = 0; i < noLoginCart.Count; i++)
+            return Json(new
             {
-                int productIDinCode = noLoginCart[i].ProductId;
-                noLoginCart[i].Product.Id = productIDinCode;
-                // noLoginCart[i].Product = from Products where Id == productIDinCode select *;
-            }
-            return noLoginCart;
-        }*/
+                success = true,
+            });
+        }
 
     }
 }

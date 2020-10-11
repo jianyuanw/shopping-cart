@@ -2,18 +2,19 @@
 
 @{
     ViewData["Title"] = "View Cart";
+    int row = 0;
 }
 
 @section Scripts {
     <script src="~/js/cart.js"></script>
 }
 
-<table class="gallery" style="border-spacing: 20px 20px; border-collapse: separate;" border="0">
+<table id="cartTable" class="gallery" style="border-spacing: 20px 20px; border-collapse: separate;" border="0">
     @foreach (Cart c in Model)
     {
-        <tr>
+        <tr id=@("row" + row)>
             <td style="border:2px solid black;" width="50%">
-                <img src="@c.Product.ImageLink.TrimStart('~', '/')" />
+                <img src="@c.Product.ImageLink.TrimStart('~')" />
                 <p>@c.Product.Name</p>
                 <p>@c.Product.Description</p>
             </td>
@@ -23,7 +24,11 @@
                     Quantity:
                     <input id="@("quantity" + c.ProductId)" class="productQuantity" type="number" min="0" value="@c.Quantity" />
                 </p>
+                <button id="@("remove" + c.ProductId)" class="productRemove" data-row="@row" hidden>
+                    Remove
+                </button>
             </td>
         </tr>
+        row++;
     }
 </table>

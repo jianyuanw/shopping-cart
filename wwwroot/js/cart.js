@@ -2,18 +2,38 @@
     let elemList = document.getElementsByClassName("productQuantity");
 
     for (let i = 0; i < elemList.length; i++) {
-        elemList[i].addEventListener("input", updateQuantity);
+        elemList[i].addEventListener("input", updateProduct);
+    }
+
+    let removeList = document.getElementsByClassName("productRemove");
+
+    for (let i = 0; i < removeList.length; i++) {
+        removeList[i].addEventListener("click", removeProduct)
     }
 }
 
-function updateQuantity(event) {
+function updateProduct(event) {
     let cartItem = event.target;
     let cartId = cartItem.getAttribute("id");
     let productId = parseInt(cartId.substring(cartId.indexOf("quantity") + 8));
-    ajaxRequest(productId, parseInt(cartItem.value));
+    let quantity = parseInt(cartItem.value);
+    if (quantity == 0) {
+        document.getElementById("remove" + productId.toString()).hidden = false;
+    } else {
+        document.getElementById("remove" + productId.toString()).hidden = true;
+    }
+    ajaxRequestUpdate(productId, quantity);
 }
 
-function ajaxRequest(productId, quantity) {
+function removeProduct(event) {
+    let cartItem = event.target;
+    let cartId = cartItem.getAttribute("id");
+    let productId = parseInt(cartId.substring(cartId.indexOf("remove") + 6));
+    let row = cartItem.getAttribute("data-row");
+    ajaxRequestRemove(productId, row);
+}
+
+function ajaxRequestUpdate(productId, quantity) {
     let xhr = new XMLHttpRequest();
 
     xhr.open("POST", "/Cart/Update");
@@ -38,4 +58,27 @@ function ajaxRequest(productId, quantity) {
 
     // send key value pairs to server
     xhr.send('productId=' + productId + "&quantity=" + quantity);
+}
+
+function ajaxRequestRemove(productId, row) {
+    let xhr = new XMLHttpRequest();
+
+    xhr.open("POST", "/Cart/Remove");
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded", "charset=utf8");
+
+    xhr.onreadystatechange = function () {
+        if (this.readyState === XMLHttpRequest.DONE) {
+            // receives response from server
+            if (this.status == 200) {
+                let data = JSON.parse(this.responseText);
+                if (data.success === true) {
+                    // To be done if request is successful
+                    document.getElementById("row" + row.toString()).remove();
+                }
+            }
+        }
+    };
+
+    // send key value pairs to server
+    xhr.send('productId=' + productId + "&row=" + row);
 }
