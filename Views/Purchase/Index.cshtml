@@ -1,5 +1,4 @@
-﻿@model PurchasesViewModel
-
+﻿@model IEnumerable<PurchasesViewModel>
 @{
     ViewData["Title"] = "My Purchases";
     bool havePastOrders = (bool)ViewData["havePastOrders"];
@@ -28,7 +27,7 @@
 {
     <div class="d-flex justify-content-center">
         <table>
-            @foreach (var group in Model._products) // Loop through each group
+            @foreach (var group in Model) // Loop through each group
             {
                 <tr>
                     <td class="border border-dark product-cell">
@@ -41,11 +40,11 @@
                     </td>
                     <td class="border border-dark">
                         <table>
-                            <tr><td class="p-1 font-weight-bold">Purchased On:</td><td class="p-1">@group.OrderDate.ToString("d MMM yyyy")</td></tr>
+                            <tr><td class="p-1 font-weight-bold">Purchased On:</td><td class="p-1">@group.DateTime.ToString("d MMM yyyy")</td></tr>
                             <tr><td class="p-1 font-weight-bold">Quantity:</td><td class="p-1">@group.Quantity</td></tr>
                             @if (group.Quantity == 1) // If quantity == 1, insert activation code as normal text
                             {
-                                @foreach (var item in group.Ids)
+                                @foreach (var item in group.ActivationCode)
                                 {
                                     <tr><td class="p-1 font-weight-bold">Activation Code:</td><td class="p-1">@item</td></tr>
                                 }
@@ -56,7 +55,7 @@
                                     <td class="p-1 font-weight-bold">Activation Code:</td>
                                     <td class="p-1">
                                         <select class="custom-select custom-select-sm">
-                                            @foreach (var item in group.Ids)
+                                            @foreach (var item in group.ActivationCode)
                                             {
                                                 <option>@item</option>
                                             }

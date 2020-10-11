@@ -36,15 +36,30 @@ namespace SA51_CA_Project_Team10.Controllers
                 ViewData["Username"] = user.Username;
 
                 // Retrieve OrderDetails from DB
-                List<OrderDetail> orderDetails = _db.OrderDetails.ToList();
+                List<OrderDetail> orderDetail = _db.OrderDetails.ToList();
+                List<Order> order = _db.Orders.ToList();
+                List<Product> product = _db.Products.ToList();
 
                 // Filter based on UserId. Order by date. Select and group by relevant columns.
-                var purchases = orderDetails.OrderByDescending(od => od.Order.DateTime)
-                                            .Where(od => od.Order.UserId == user.Id)
-                                            .Select(od => new { od.Product.ImageLink, od.Product.Name, od.Product.Description, od.Order.DateTime, od.Id })
-                                            .GroupBy(d => new { d.ImageLink, d.Name, d.Description, d.DateTime }).ToList();
+                IEnumerable<PurchasesViewModel> purchases =
+                    from o in order
+                    join od in orderDetail on o.Id equals od.OrderId
+                    join p in product on od.ProductId equals p.Id
+                    where o.UserId == user.Id
+                    orderby o.DateTime descending
+                    select new { o.DateTime, od.Id, p.ImageLink, p.Name, p.Description } into y
+                    group y by new { y.DateTime, y.ImageLink, y.Name, y.Description } into grp
+                    select new PurchasesViewModel
+                    {
+                        DateTime = grp.Key.DateTime,
+                        ImageLink = grp.Key.ImageLink,
+                        Name = grp.Key.Name,
+                        Quantity = grp.Count(),
+                        Description = grp.Key.Description,
+                        ActivationCode = grp.Select(x => x.Id).ToList()
+                    };
 
-                if (purchases.Count == 0) // If no purchases, send info to View to display "no past purchases"
+                if (purchases.ToList().Count == 0) // If no purchases, send info to View to display "no past purchases"
                 {
                     ViewData["havePastOrders"] = false;
 
@@ -53,32 +68,7 @@ namespace SA51_CA_Project_Team10.Controllers
 
                 ViewData["havePastOrders"] = true;
 
-                var model = new PurchasesViewModel();
-
-                foreach (var group in purchases)
-                {
-                    bool product = false;
-                    var list = new List<string>();
-                    var COD = new ConciseOrderDetail();
-                    
-                    foreach (var item in group)
-                    {
-                        if (!product)
-                        {                            
-                            COD.ImageLink = item.ImageLink;
-                            COD.Name = item.Name;
-                            COD.Description = item.Description;
-                            COD.OrderDate = item.DateTime;
-                            COD.Quantity = group.Count();
-                            product = true;
-                        }
-                        list.Add(item.Id);
-                    }
-                    COD.Ids = list;
-                    model._products.Add(COD);
-                }
-
-                return View(model);
+                return View(purchases.ToList());
             }
             else // Else user is not logged in. Redirect to login page.
             {
