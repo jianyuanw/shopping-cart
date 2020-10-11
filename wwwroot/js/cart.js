@@ -36,11 +36,6 @@ function ajaxRequest(productId, quantity) {
         }
     };
 
-    let data = {
-        productId: productId,
-        quantity: quantity
-    };
-
     // send key value pairs to server
     xhr.send('productId=' + productId + "&quantity=" + quantity);
 }
