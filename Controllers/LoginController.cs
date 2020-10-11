@@ -38,7 +38,6 @@ namespace SA51_CA_Project_Team10.Controllers
                     ViewData["cart_quantity"] = 0;
                 }
             }
-            ViewData["Is_Login"] = "font-weight: bold";
             return View();
         }
 
@@ -89,9 +88,12 @@ namespace SA51_CA_Project_Team10.Controllers
                 _db.SaveChanges();
             }
             
+            // TempData was not expiring fast enough in some use cases, this ensures removal after single usage
             if (TempData["Redirect"] != null) 
             {
-                return Redirect((string) TempData["Redirect"]);
+                string url = (string)TempData["Redirect"];
+                TempData.Remove("Redirect");
+                return Redirect(url);
             }
             return Redirect("/Gallery/Index");
         }
