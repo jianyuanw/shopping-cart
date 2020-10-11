@@ -4,6 +4,11 @@
     bool havePastOrders = (bool)ViewData["havePastOrders"];
 }
 
+@section Scripts
+{
+    <script src="~/js/my_purchases.js"></script>
+}
+
 <style>
     .product-image {
         width: 100px;
@@ -40,7 +45,7 @@
                     </td>
                     <td class="border border-dark">
                         <table>
-                            <tr><td class="p-1 font-weight-bold">Purchased On:</td><td class="p-1">@group.DateTime.ToString("d MMM yyyy")</td></tr>
+                            <tr><td class="p-1 font-weight-bold">Purchased On:</td><td class="p-1" id="product-@group.ProductId">@group.DateTime[0].ToString("d MMM yyyy")</td></tr>
                             <tr><td class="p-1 font-weight-bold">Quantity:</td><td class="p-1">@group.Quantity</td></tr>
                             @if (group.Quantity == 1) // If quantity == 1, insert activation code as normal text
                             {
@@ -54,10 +59,10 @@
                                 <tr>
                                     <td class="p-1 font-weight-bold">Activation Code:</td>
                                     <td class="p-1">
-                                        <select class="custom-select custom-select-sm">
+                                        <select class="custom-select custom-select-sm code-selector">
                                             @foreach (var item in group.ActivationCode)
                                             {
-                                                <option>@item</option>
+                                                <option value="@item">@item</option>
                                             }
                                         </select>
                                     </td>

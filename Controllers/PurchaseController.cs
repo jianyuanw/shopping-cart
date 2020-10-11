@@ -47,16 +47,17 @@ namespace SA51_CA_Project_Team10.Controllers
                     join p in product on od.ProductId equals p.Id
                     where o.UserId == user.Id
                     orderby o.DateTime descending
-                    select new { o.DateTime, od.Id, p.ImageLink, p.Name, p.Description } into y
-                    group y by new { y.DateTime, y.ImageLink, y.Name, y.Description } into grp
+                    select new { o.DateTime, od.Id, p.ImageLink, p.Name, p.Description, od.ProductId} into y
+                    group y by new { y.ImageLink, y.Name, y.Description, y.ProductId } into grp
                     select new PurchasesViewModel
                     {
-                        DateTime = grp.Key.DateTime,
+                        DateTime = grp.Select(x => x.DateTime).ToList(),
                         ImageLink = grp.Key.ImageLink,
                         Name = grp.Key.Name,
                         Quantity = grp.Count(),
                         Description = grp.Key.Description,
-                        ActivationCode = grp.Select(x => x.Id).ToList()
+                        ActivationCode = grp.Select(x => x.Id).ToList(),
+                        ProductId = grp.Key.ProductId
                     };
 
                 if (purchases.ToList().Count == 0) // If no purchases, send info to View to display "no past purchases"
@@ -76,6 +77,20 @@ namespace SA51_CA_Project_Team10.Controllers
 
                 return RedirectToAction("Index", "Login");
             }
+        }
+
+        public IActionResult UpdatePurchaseDate([FromBody] string selectedCode)
+        {
+            OrderDetail orderDetail = _db.OrderDetails.FirstOrDefault(x => x.Id == selectedCode);
+
+            string purchaseDate = orderDetail.Order.DateTime.ToString("d MMM yyyy");
+            int productId = orderDetail.ProductId;
+
+            return Json(new
+            {
+                PurchaseDate = purchaseDate,
+                ProductId = productId
+            });
         }
     }
 }
