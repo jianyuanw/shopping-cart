@@ -12,16 +12,19 @@ namespace SA51_CA_Project_Team10.Controllers
     public class CartController : Controller
     {
         private readonly DbT10Software _db;
+        private readonly Verify _v;
 
-        public CartController (DbT10Software _db)
+        public CartController (DbT10Software _db, Verify v)
         {
             this._db = _db;
+            _v = v;
         }
-        public IActionResult Index(Verify v)
+        public IActionResult Index()
         {
             string sessionId = HttpContext.Request.Cookies["sessionId"];
+            List<Cart> carts = new List<Cart>();
             //validate session 
-            if (v.VerifySession(sessionId, _db))
+            if (_v.VerifySession(sessionId, _db))
             {
                 ViewData["Logged"] = true;
                 User user = _db.Sessions.FirstOrDefault(s => s.Id == sessionId).User;
@@ -29,12 +32,7 @@ namespace SA51_CA_Project_Team10.Controllers
                 ViewData["Username"] = user.Username;
 
                 //retrieve product number labeled beside icon
-                List<Cart> carts = _db.Carts.Where(x => x.UserId == user.Id).ToList();
-
-                ViewData["cart_quantity"] = carts.Count;
-
-                // pack Cart list and deliver to view; now user logged in;
-                ViewData["ItemsInCart"] = carts;
+                carts = _db.Carts.Where(x => x.UserId == user.Id).ToList();
             }
             else
             {
@@ -43,11 +41,7 @@ namespace SA51_CA_Project_Team10.Controllers
                 if (cartCookie != null)
                 {
                     var guestCart = JsonSerializer.Deserialize<GuestCart>(HttpContext.Request.Cookies["guestCart"]);
-
-                    ViewData["cart_quantity"] = guestCart.Count();
-
-                    ViewData["ItemsInCart"] = guestCart.Products;
-
+                    carts = guestCart.Products;
                     // implement create List <object> and deliver to ViewData["ItemsInCart"]
                     // List<Cart> noLoginCart = new List<Cart>();
 
@@ -61,10 +55,18 @@ namespace SA51_CA_Project_Team10.Controllers
 
                     // ViewData["ItemsInCart"] = noLoginCart;
                 }
-                else
-                {
-                    ViewData["cart_quantity"] = 0;
-                }
+            }
+
+            if (carts.Count == 0)
+            {
+                ViewData["cart_quantity"] = 0;
+                ViewData["Total"] = 0;
+                return View("NoItemCart");
+            } else
+            {
+                ViewData["cart_quantity"] = carts.Sum(cart => cart.Quantity);
+                ViewData["ItemsInCart"] = carts;
+                ViewData["Total"] = carts.Sum(cart => cart.Quantity * cart.Product.Price);
             }
 
             // check the cart_quantity, if no item in cart, return no item cart page;
@@ -78,8 +80,51 @@ namespace SA51_CA_Project_Team10.Controllers
 
             //bold navbar 
             ViewData["Is_Cart"] = "font-weight: bold";
-            return View("ItemCart");
+            return View(carts);
 
+        }
+
+        [HttpPost]
+        public JsonResult Update(int productId, int quantity)
+        {
+            string sessionId = HttpContext.Request.Cookies["sessionId"];
+            string newPrice;
+            string totalPrice;
+
+            if (_v.VerifySession(sessionId, _db))
+            {
+                User user = _db.Sessions.FirstOrDefault(session => session.Id == sessionId).User;
+                Cart cart = _db.Carts.FirstOrDefault(cart => cart.UserId == user.Id && cart.ProductId == productId);
+
+                cart.Quantity = quantity;
+
+                _db.SaveChanges();
+
+                newPrice = (cart.Quantity * cart.Product.Price).ToString();
+                totalPrice = (_db.Carts.Where(cart => cart.UserId == user.Id).Sum(cart => cart.Quantity * cart.Product.Price)).ToString();
+
+            } else
+            {
+                var guestCart = JsonSerializer.Deserialize<GuestCart>(HttpContext.Request.Cookies["guestCart"]);
+                foreach (var product in guestCart.Products)
+                {
+                    if (product.ProductId == productId)
+                    {
+                        product.Quantity = quantity;
+                    }
+                }
+                HttpContext.Response.Cookies.Append("guestCart", JsonSerializer.Serialize<GuestCart>(guestCart));
+
+                newPrice = (_db.Products.FirstOrDefault(product => product.Id == productId).Price * quantity).ToString();
+                totalPrice = (guestCart.Products.Sum(cart => cart.Quantity * cart.Product.Price)).ToString();
+            }
+
+            return Json(new
+            {
+                success = true,
+                newPrice,
+                totalPrice
+            });
         }
 
         /*public static List<Cart> DeriveNoLoginCartListFromCookie(List<Cart> noLoginCart, string[] cart)

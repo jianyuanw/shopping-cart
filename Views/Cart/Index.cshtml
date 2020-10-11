@@ -1,0 +1,29 @@
+﻿@model List<Cart>
+
+@{
+    ViewData["Title"] = "View Cart";
+}
+
+@section Scripts {
+    <script src="~/js/cart.js"></script>
+}
+
+<table class="gallery" style="border-spacing: 20px 20px; border-collapse: separate;" border="0">
+    @foreach (Cart c in Model)
+    {
+        <tr>
+            <td style="border:2px solid black;" width="50%">
+                <img src="@c.Product.ImageLink.TrimStart('~', '/')" />
+                <p>@c.Product.Name</p>
+                <p>@c.Product.Description</p>
+            </td>
+            <td>
+                <p id="@("price" + c.ProductId)">Price:       @("$" + (c.Quantity * c.Product.Price).ToString())</p>
+                <p>
+                    Quantity:
+                    <input id="@("quantity" + c.ProductId)" class="productQuantity" type="number" min="0" value="@c.Quantity" />
+                </p>
+            </td>
+        </tr>
+    }
+</table>
