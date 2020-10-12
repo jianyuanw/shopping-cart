@@ -22,12 +22,13 @@ namespace SA51_CA_Project_Team10.Controllers
 
             if (sessionId != null)
             {
-                _db.Sessions.Remove(new Session()
+                var session = _db.Sessions.FirstOrDefault(session => session.Id == sessionId);
+
+                if (session != null)
                 {
-                    Id = sessionId
-                });
-                _db.SaveChanges();
-                
+                    _db.Sessions.Remove(session);
+                    _db.SaveChanges();
+                }
             }
 
 
