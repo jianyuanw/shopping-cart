@@ -77,9 +77,9 @@ function highlightStars(elements, stars) {
     let half = 0;
     if (stars.length > 1) {
         half = stars.slice(-1);
-        stars = stars.slice(0, 1);
+        stars = parseInt(stars.slice(0, 1));
     }
-    stars = parseInt(stars);
+
     for (let i = 0; i < elements.length; i++) {
         let currentStar = elements[i].getAttribute("name")
         if (currentStar == null) {
@@ -88,10 +88,11 @@ function highlightStars(elements, stars) {
             currentStar = parseInt(currentStar.substr(4));
         }
 
+
         if (currentStar <= stars) {
-            elements[i].src = elements[i].getAttribute("src").replace("blank", "full");
+            elements[i].src = elements[i].getAttribute("src").replace("blank", "full").replace("half", "full");
         } else if (currentStar === stars + 1 && half === '5') {
-            elements[i].src = elements[i].getAttribute("src").replace("blank", "half");
+            elements[i].src = elements[i].getAttribute("src").replace("blank", "half").replace("full", "half");
         } else {
             elements[i].src = elements[i].getAttribute("src").replace("full", "blank").replace("half", "blank");
         }
