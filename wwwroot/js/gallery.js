@@ -36,7 +36,6 @@ function onclick(event) {
                     let cartelem = document.getElementById('cartnum');
                     let num = cartelem.innerHTML;
                     cartelem.innerHTML = parseInt(num) + 1;
-                    console.log("Successful operation: " + num);
                 }
             }
         }

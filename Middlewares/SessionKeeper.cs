@@ -22,7 +22,7 @@ namespace SA51_CA_Project_Team10.Middlewares
             
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, ITempDataDictionaryFactory factory, DbT10Software db)
         {
             // check and get exisiting user lastaccesstime
             string lastAccess = context.Request.Cookies["lastAccessTime"];
@@ -31,7 +31,12 @@ namespace SA51_CA_Project_Team10.Middlewares
             if (lastAccess == null)
             {
                 // When lastAccessTime is null, it is a new session
-                context.Response.Cookies.Append("lastAccessTime", DateTime.Now.ToString());
+                context.Response.Cookies.Append("lastAccessTime", DateTime.Now.ToString(), new CookieOptions
+                {
+                    Secure = true,
+                    HttpOnly = true,
+                    SameSite = SameSiteMode.Lax
+                });
 
             } else
             {
@@ -46,12 +51,36 @@ namespace SA51_CA_Project_Team10.Middlewares
                     context.Response.Cookies.Delete("lastAccessTime");
                     context.Response.Redirect("/SessionTimeout/Index");
 
+                    string sessionId = context.Request.Cookies["sessionId"];
+
+                    if (sessionId != null)
+                    {
+                        var session = db.Sessions.FirstOrDefault(session => session.Id == sessionId);
+
+                        if (session != null)
+                        {
+                            db.Sessions.Remove(session);
+                            db.SaveChanges();
+                        }
+                    }
+
+                    context.Response.Cookies.Delete("sessionId");
+
+                    // Uses injected TempData factory to fetch TempData from context before inserting text
+                    ITempDataDictionary TempData = factory.GetTempData(context);
+                    TempData["Alert"] = "warning|Your session has timed-out!";
+
                     return;
                 } 
                 else
                 {
                     // if user still activ, keep Update last access time stamp
-                    context.Response.Cookies.Append("lastAccessTime", DateTime.Now.ToString());
+                    context.Response.Cookies.Append("lastAccessTime", DateTime.Now.ToString(), new CookieOptions
+                    {
+                        Secure = true,
+                        HttpOnly = true,
+                        SameSite = SameSiteMode.Lax
+                    });
                 }
             }
               

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using SA51_CA_Project_Team10.DBs;
@@ -106,7 +107,14 @@ namespace SA51_CA_Project_Team10.Controllers
                     guestCart = new GuestCart();
                 }
                 guestCart.Add(productId, _db.Products.FirstOrDefault(p => p.Id == productId));
-                HttpContext.Response.Cookies.Append("guestCart", JsonSerializer.Serialize<GuestCart>(guestCart));
+
+                HttpContext.Response.Cookies.Append("guestCart", JsonSerializer.Serialize<GuestCart>(guestCart), new CookieOptions
+                {
+                    Secure = true,
+                    HttpOnly = true,
+                    SameSite = SameSiteMode.Lax
+                });
+                
                 return Json(new
                 {
                     success = true

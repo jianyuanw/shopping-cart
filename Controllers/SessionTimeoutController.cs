@@ -31,7 +31,6 @@ namespace SA51_CA_Project_Team10.Controllers
                 }
             }
 
-
             HttpContext.Response.Cookies.Delete("sessionId");
 
             TempData["Alert"] = "warning|Your session has timed-out!";

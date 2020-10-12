@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using SA51_CA_Project_Team10.DBs;
 using SA51_CA_Project_Team10.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace SA51_CA_Project_Team10.Controllers
 {
@@ -60,7 +61,14 @@ namespace SA51_CA_Project_Team10.Controllers
                     TimeStamp = DateTime.Now
                 });
                 _db.SaveChanges();
-                Response.Cookies.Append("sessionId", guid);
+
+                Response.Cookies.Append("sessionId", guid, new CookieOptions
+                {
+                    Secure = true,
+                    HttpOnly = true,
+                    SameSite = SameSiteMode.Lax
+                });
+
                 TempData["Alert"] = "primary|Successfully logged in!";
 
                 foreach (var cart in _db.Carts.Where(cart => cart.UserId == user.Id))
