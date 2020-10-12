@@ -71,6 +71,7 @@ namespace SA51_CA_Project_Team10.Controllers
             else // Else user is not logged in. Redirect to login page.
             {
                 TempData["Alert"] = "primary|Please log in to view your purchases.";
+                TempData["ReturnUrl"] = "/Purchase/Index";
 
                 return RedirectToAction("Index", "Login");
             }

@@ -3,7 +3,7 @@
     ViewData["Title"] = "Login";
 }
 
-<form action="/Login/Authenticate" method="post">
+<form asp-controller="Login" asp-action="Authenticate" asp-route-returnurl="@TempData["ReturnUrl"]" method="post">
     <table style="border:none">
         <tr>
             <td>

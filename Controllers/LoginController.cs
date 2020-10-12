@@ -8,6 +8,7 @@ using System.Text.Json;
 using SA51_CA_Project_Team10.DBs;
 using SA51_CA_Project_Team10.Models;
 using Microsoft.AspNetCore.Http;
+using Castle.Core.Internal;
 
 namespace SA51_CA_Project_Team10.Controllers
 {
@@ -43,7 +44,7 @@ namespace SA51_CA_Project_Team10.Controllers
         }
 
         [HttpPost]
-        public IActionResult Authenticate(Hasher hasher, string username, string password)
+        public IActionResult Authenticate(Hasher hasher, string username, string password, string returnUrl)
         {
             User user = _db.Users.FirstOrDefault(x => x.Username == username);
             if (user == null || hasher.GenerateHashString(password, user.Salt) != user.Password)
@@ -94,14 +95,18 @@ namespace SA51_CA_Project_Team10.Controllers
                 }
                 _db.SaveChanges();
             }
-            
+
             // TempData was not expiring fast enough in some use cases, this ensures removal after single usage
-            if (TempData["Redirect"] != null) 
+            if (TempData["ReturnUrl"] != null)
             {
-                string url = (string)TempData["Redirect"];
-                TempData.Remove("Redirect");
-                return Redirect(url);
+                TempData.Remove("ReturnUrl");
             }
+
+            if (!returnUrl.IsNullOrEmpty())
+            {
+                return Redirect(returnUrl);
+            }
+
             return Redirect("/Gallery/Index");
         }
     }

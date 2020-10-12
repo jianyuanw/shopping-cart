@@ -98,7 +98,7 @@ namespace SA51_CA_Project_Team10.Controllers
 
             } else
             {
-                TempData["Redirect"] = "/Cart/Index";
+                TempData["ReturnUrl"] = "/Cart/Index";
                 TempData["Alert"] = "danger|Login is required to checkout, please login.";
                 return Redirect("/Login/Index");
             }
