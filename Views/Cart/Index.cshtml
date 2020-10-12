@@ -22,11 +22,10 @@
                 <p id="@("price" + c.ProductId)">Unit Price:       @("$" + (c.Product.Price).ToString())</p>
                 <p>
                     Quantity:
-                    <input id="@("quantity" + c.ProductId)" class="productQuantity" type="number" min="0" value="@c.Quantity" />
+                    <input id="@("quantity" + c.ProductId)" class="productQuantity" type="number" min="1" value="@c.Quantity" />
+                    <input type="image" id="@("remove" + c.ProductId)" class="productRemove" data-row="@row" src="~/images/trash_white.png" width="25" >
                 </p>
-                <button id="@("remove" + c.ProductId)" class="productRemove" data-row="@row" hidden>
-                    Remove
-                </button>
+
             </td>
         </tr>
         row++;

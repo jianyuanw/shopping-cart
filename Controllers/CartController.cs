@@ -155,35 +155,47 @@ namespace SA51_CA_Project_Team10.Controllers
         public JsonResult Remove(int productId, int row)
         {
             string sessionId = HttpContext.Request.Cookies["sessionId"];
+            string totalPrice;
 
             if (_v.VerifySession(sessionId, _db))
             {
                 User user = _db.Sessions.FirstOrDefault(session => session.Id == sessionId).User;
                 Cart cart = _db.Carts.FirstOrDefault(cart => cart.UserId == user.Id && cart.ProductId == productId);
+                totalPrice = (_db.Carts.Where(cart => cart.UserId == user.Id).Sum(cart => cart.Quantity * cart.Product.Price)).ToString();
 
                 _db.Carts.Remove(cart);
 
                 _db.SaveChanges();
-
             }
             else
             {
                 var guestCart = JsonSerializer.Deserialize<GuestCart>(HttpContext.Request.Cookies["guestCart"]);
+                int priceSum = 0;
+                Cart productToRemove = null;
+
                 foreach (var product in guestCart.Products)
                 {
                     if (product.ProductId == productId)
                     {
-                        guestCart.Products.Remove(product);
-                        break;
+                        productToRemove = product;
+                        continue;
                     }
+                    priceSum += _db.Products.FirstOrDefault(product => product.Id == productId).Price * product.Quantity;
                 }
+                if (productToRemove != null)
+                {
+                    guestCart.Products.Remove(productToRemove);
+                }
+
                 HttpContext.Response.Cookies.Append("guestCart", JsonSerializer.Serialize<GuestCart>(guestCart));
+                totalPrice = priceSum.ToString();
             }
 
             return Json(new
             {
                 success = true,
-            });
+                totalPrice,
+        });
         }
 
     }

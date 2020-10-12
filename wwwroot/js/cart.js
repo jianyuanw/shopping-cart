@@ -17,11 +17,7 @@ function updateProduct(event) {
     let cartId = cartItem.getAttribute("id");
     let productId = parseInt(cartId.substring(cartId.indexOf("quantity") + 8));
     let quantity = parseInt(cartItem.value);
-    if (quantity == 0) {
-        document.getElementById("remove" + productId.toString()).hidden = false;
-    } else {
-        document.getElementById("remove" + productId.toString()).hidden = true;
-    }
+
     ajaxRequestUpdate(productId, quantity);
 }
 
@@ -75,6 +71,7 @@ function ajaxRequestRemove(productId, row) {
                 if (data.success === true) {
                     // To be done if request is successful
                     document.getElementById("row" + row.toString()).remove();
+                    document.getElementById('totalPrice').innerHTML = "Total: $" + data.totalPrice;
                 }
             }
         }
