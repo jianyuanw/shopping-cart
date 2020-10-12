@@ -161,11 +161,11 @@ namespace SA51_CA_Project_Team10.Controllers
             {
                 User user = _db.Sessions.FirstOrDefault(session => session.Id == sessionId).User;
                 Cart cart = _db.Carts.FirstOrDefault(cart => cart.UserId == user.Id && cart.ProductId == productId);
-                totalPrice = (_db.Carts.Where(cart => cart.UserId == user.Id).Sum(cart => cart.Quantity * cart.Product.Price)).ToString();
 
                 _db.Carts.Remove(cart);
 
                 _db.SaveChanges();
+                totalPrice = (_db.Carts.Where(cart => cart.UserId == user.Id).Sum(cart => cart.Quantity * cart.Product.Price)).ToString();
             }
             else
             {
@@ -195,7 +195,7 @@ namespace SA51_CA_Project_Team10.Controllers
             {
                 success = true,
                 totalPrice,
-        });
+            });
         }
 
     }
