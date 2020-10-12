@@ -19,13 +19,18 @@
                 <p>@c.Product.Description</p>
             </td>
             <td>
-                <p id="@("price" + c.ProductId)">Unit Price:       @("$" + (c.Product.Price).ToString())</p>
-                <p>
-                    Quantity:
-                    <input id="@("quantity" + c.ProductId)" class="productQuantity" type="number" min="1" value="@c.Quantity" style="width: 55px;" required />
-                    <input type="image" id="@("remove" + c.ProductId)" class="productRemove" data-row="@row" src="~/images/trash_white.png" width="25" >
-                </p>
-
+                <table>
+                    <tr>
+                        <td class="p-1 font-weight-bold text-right">Unit Price:</td>
+                        <td class="p-1 text-left" id="@("price" + c.ProductId)">@("$" + (c.Product.Price).ToString())</td>
+                    </tr>
+                    <tr>
+                        <td class="p-1 font-weight-bold text-right">Quantity:</td>
+                        <td class="p-1">
+                            <input id="@("quantity" + c.ProductId)" class="productQuantity" type="number" min="1" value="@c.Quantity" style="width: 55px;" required /><input type="image" id="@("remove" + c.ProductId)" class="productRemove" data-row="@row" src="~/images/trash_white.png" width="25">
+                        </td>
+                    </tr>
+                </table>
             </td>
         </tr>
         row++;
