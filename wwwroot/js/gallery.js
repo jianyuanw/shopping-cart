@@ -1,8 +1,20 @@
-﻿window.onload = function () {
+﻿let prevEventTarget;
+
+window.onload = function () {
     let elemList = document.getElementsByClassName("productbtn");
 
     for (let i = 0; i < elemList.length; i++) {
         elemList[i].addEventListener("click", onclick);
+    }
+
+    let starsDivList = document.getElementsByClassName("urdiv");
+
+    initStars(starsDivList);
+
+    for (let i = 0; i < starsDivList.length; i++) {
+        starsDivList[i].addEventListener("mouseover", ratingStars);
+        starsDivList[i].addEventListener("mouseout", averageStars);
+        starsDivList[i].addEventListener("click", newStar);
     }
 }
 
@@ -33,4 +45,3 @@ function onclick(event) {
     // send like/unlike choice to server
     xhr.send('productId=' + proId);
 }
-

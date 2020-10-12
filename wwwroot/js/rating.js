@@ -1,15 +1,4 @@
-﻿let starsDivList = document.getElementsByClassName("urdiv");
-let prevEventTarget;
-
-window.onload = initStars();
-
-for (let i = 0; i < starsDivList.length; i++) {
-    starsDivList[i].addEventListener("mouseover", ratingStars);
-    starsDivList[i].addEventListener("mouseout", averageStars);
-    starsDivList[i].addEventListener("click", newStar);
-}
-
-function initStars() {
+﻿function initStars(starsDivList) {
     for (let i = 0; i < starsDivList.length; i++) {
         let elements = starsDivList[i].children;
         let stars = starsDivList[i].getAttribute("data-average");

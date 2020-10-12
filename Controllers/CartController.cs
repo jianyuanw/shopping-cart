@@ -48,6 +48,7 @@ namespace SA51_CA_Project_Team10.Controllers
 
             if (carts.Count == 0)
             {
+                // Points to alternate view if there are no items
                 ViewData["cart_quantity"] = 0;
                 ViewData["Total"] = 0;
                 return View("NoItemCart");
@@ -58,17 +59,6 @@ namespace SA51_CA_Project_Team10.Controllers
                 ViewData["Total"] = carts.Sum(cart => cart.Quantity * cart.Product.Price);
             }
 
-            // check the cart_quantity, if no item in cart, return no item cart page;
-            if((int)ViewData["cart_quantity"] == 0)
-                return View("NoItemCart");
-
-            //-----implement cart logic start here(please dont modify others part code)----//
-            //implement...
-            //implement...
-            //-----implement cart logic end here(please dont modify others part code)----//
-
-            //bold navbar 
-            ViewData["Is_Cart"] = "font-weight: bold";
             return View(carts);
 
         }
@@ -137,18 +127,20 @@ namespace SA51_CA_Project_Team10.Controllers
             } else
             {
                 var guestCart = JsonSerializer.Deserialize<GuestCart>(HttpContext.Request.Cookies["guestCart"]);
+                int priceSum = 0;
+
                 foreach (var product in guestCart.Products)
                 {
                     if (product.ProductId == productId)
                     {
                         product.Quantity = quantity;
-                        break;
                     }
+                    priceSum += _db.Products.FirstOrDefault(product => product.Id == productId).Price * product.Quantity;
                 }
                 HttpContext.Response.Cookies.Append("guestCart", JsonSerializer.Serialize<GuestCart>(guestCart));
 
                 newPrice = (_db.Products.FirstOrDefault(product => product.Id == productId).Price * quantity).ToString();
-                totalPrice = (guestCart.Products.Sum(cart => cart.Quantity * cart.Product.Price)).ToString();
+                totalPrice = priceSum.ToString();
             }
 
             return Json(new
