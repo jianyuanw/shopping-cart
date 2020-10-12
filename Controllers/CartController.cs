@@ -127,7 +127,7 @@ namespace SA51_CA_Project_Team10.Controllers
             } else
             {
                 var guestCart = JsonSerializer.Deserialize<GuestCart>(HttpContext.Request.Cookies["guestCart"]);
-                int priceSum = 0;
+                double priceSum = 0;
 
                 foreach (var product in guestCart.Products)
                 {
@@ -170,7 +170,7 @@ namespace SA51_CA_Project_Team10.Controllers
             else
             {
                 var guestCart = JsonSerializer.Deserialize<GuestCart>(HttpContext.Request.Cookies["guestCart"]);
-                int priceSum = 0;
+                double priceSum = 0;
                 Cart productToRemove = null;
 
                 foreach (var product in guestCart.Products)

@@ -14,7 +14,7 @@ namespace SA51_CA_Project_Team10.Models
         [Required, MaxLength(250)]
         public string Description { get; set; }
         [Required]
-        public int Price { get; set; }
+        public double Price { get; set; }
         public string ImageLink { get; set; }
         public virtual ICollection<Rating> Ratings { get; set; }
     }
