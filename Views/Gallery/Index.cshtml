@@ -31,7 +31,7 @@
     </form>
 </div>
     
-<table class="gallery" style="border-spacing: 20px 20px; border-collapse: separate;" border="0">
+<table class="gallery" style="border-spacing: 20px 20px; border-collapse: separate; table-layout: fixed;" border="0">
     @for (int i = 0; i < Model.DisplayedProducts.Count; i += Model.Columns)
     {
         <tr>
@@ -39,7 +39,7 @@
             {
                 string url = Model.DisplayedProducts[j].ImageLink.StartsWith("~") ? Model.DisplayedProducts[j].ImageLink.Substring(1) : Model.DisplayedProducts[j].ImageLink;
 
-                <td class="galleryTtd celldiv" style="border: 2px solid black" width="33%">     
+                <td class="galleryTtd celldiv" style="border: 2px solid black; width: 33%;">     
                     <div id=@("urdiv" + Model.DisplayedProducts[j].Id) class="urdiv" data-product="@Model.DisplayedProducts[j].Id" data-average="@Model.AverageRating(Model.DisplayedProducts[j].Id)" data-rated="@Model.UserRating(Model.DisplayedProducts[j].Id)">
                         <span id="@("rating" + Model.DisplayedProducts[j].Id)">Average rating:</span>
                         <img class="@("stars" + group.ToString())" style="cursor: pointer;" name="star1" src="~/images/blank_star.png" width="20" />
@@ -56,11 +56,11 @@
                 </td>
                 group++;
             }
-            @if (group < 3)
+            @if (group < 4)
             {
-                @for (int k = 0; k <= 3 - group; k++)
+                @for (int k = 0; k < 4 - group; k++)
                 {
-                    <td width="33%"></td>
+                    <td class="celldiv" style="width: 33%;"></td>
                 }
             }
         </tr>
