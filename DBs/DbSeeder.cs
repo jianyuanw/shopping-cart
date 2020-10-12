@@ -83,7 +83,7 @@ namespace SA51_CA_Project_Team10.DBs
                 "Keep your computer safe from malware and viruses!",
                 "Parses audio of off-tune instruments and digitally tunes them."
             };
-            int[] prices = { 99, 69, 299, 299, 49, 199, 65, 15, 35, 55, 25, 45, 35 };
+            double[] prices = { 99, 69, 299, 299, 49, 199, 65, 15, 35, 55, 25, 45, 35.5 };
             string[] imagelinks =
             {
                 "NET_Charts.png",
