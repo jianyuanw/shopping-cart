@@ -19,7 +19,7 @@
                 <p>@c.Product.Description</p>
             </td>
             <td>
-                <p id="@("price" + c.ProductId)">Price:       @("$" + (c.Quantity * c.Product.Price).ToString())</p>
+                <p id="@("price" + c.ProductId)">Unit Price:       @("$" + (c.Product.Price).ToString())</p>
                 <p>
                     Quantity:
                     <input id="@("quantity" + c.ProductId)" class="productQuantity" type="number" min="0" value="@c.Quantity" />

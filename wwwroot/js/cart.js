@@ -49,7 +49,8 @@ function ajaxRequestUpdate(productId, quantity) {
                 let data = JSON.parse(this.responseText);
                 if (data.success === true)
                 {
-                    document.getElementById('price' + productId).innerHTML = "Price: $" + data.newPrice;                    
+                    // Commented out because updating prices dynamically was not fitting specifications
+                    //document.getElementById('price' + productId).innerHTML = "Price: $" + data.newPrice;                    
                     document.getElementById('totalPrice').innerHTML = "Total: $" + data.totalPrice;
                 }
             }
