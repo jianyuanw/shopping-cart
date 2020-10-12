@@ -2,7 +2,7 @@
     let elemList = document.getElementsByClassName("productQuantity");
 
     for (let i = 0; i < elemList.length; i++) {
-        elemList[i].addEventListener("input", updateProduct);
+        elemList[i].addEventListener("change", updateProduct);
     }
 
     let removeList = document.getElementsByClassName("productRemove");
@@ -14,6 +14,12 @@
 
 function updateProduct(event) {
     let cartItem = event.target;
+
+    if (cartItem.value === '') {
+        cartItem.value = 1;
+        return;
+    }
+
     let cartId = cartItem.getAttribute("id");
     let productId = parseInt(cartId.substring(cartId.indexOf("quantity") + 8));
     let quantity = parseInt(cartItem.value);

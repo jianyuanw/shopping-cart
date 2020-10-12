@@ -182,6 +182,7 @@ namespace SA51_CA_Project_Team10.Controllers
                     }
                     priceSum += _db.Products.FirstOrDefault(p => p.Id == product.ProductId).Price * product.Quantity;
                 }
+
                 if (productToRemove != null)
                 {
                     guestCart.Products.Remove(productToRemove);
