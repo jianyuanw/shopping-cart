@@ -15,7 +15,7 @@
 function updateProduct(event) {
     let cartItem = event.target;
 
-    if (cartItem.value === '') {
+    if (cartItem.value === '' || cartItem.value <= 0) {
         cartItem.value = 1;
     }
 
