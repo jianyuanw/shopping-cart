@@ -3,10 +3,25 @@
 @section Scripts
 {
     <script src="~/js/gallery.js"></script>
+    <script src="~/js/rating.js"></script>
 }
+
 @{
     ViewData["Title"] = "Libraries Gallery";
+    int group = 1;
 }
+
+<style>
+    .celldiv {
+        position: relative;
+    }
+
+    .urdiv {
+        top: 5px;
+        right: 5px;
+        position: absolute;
+    }
+</style>
 
 <div style="text-align:center">
     <form class="inlinef" action="/Gallery/Index" method="post">
@@ -23,14 +38,30 @@
             @for (int j = i; j < i + Model.Columns && j < Model.DisplayedProducts.Count; ++j)
             {
                 string url = Model.DisplayedProducts[j].ImageLink.StartsWith("~") ? Model.DisplayedProducts[j].ImageLink.Substring(1) : Model.DisplayedProducts[j].ImageLink;
-                <td class="galleryTtd" style="border: 2px solid black">
-                    <div>
-                        <img src="@url" width="75" />
-                        <h2>@Model.DisplayedProducts[j].Name</h2>
-                        <p>@Model.DisplayedProducts[j].Description</p>
-                        <button class="productbtn" type="button" productId="@Model.DisplayedProducts[j].Id">$@Model.DisplayedProducts[j].Price - Add To Cart</button><br />
+
+                <td class="galleryTtd celldiv" style="border: 2px solid black" width="33%">     
+                    <div id=@("urdiv" + Model.DisplayedProducts[j].Id) class="urdiv" data-product="@Model.DisplayedProducts[j].Id" data-average="@Model.AverageRating(Model.DisplayedProducts[j].Id)" data-rated="@Model.UserRating(Model.DisplayedProducts[j].Id)">
+                        <span id="@("rating" + Model.DisplayedProducts[j].Id)">Average rating:</span>
+                        <img class="@("stars" + group.ToString())" name="star1" src="~/images/blank_star.png" width="20" />
+                        <img class="@("stars" + group.ToString())" name="star2" src="~/images/blank_star.png" width="20" />
+                        <img class="@("stars" + group.ToString())" name="star3" src="~/images/blank_star.png" width="20" />
+                        <img class="@("stars" + group.ToString())" name="star4" src="~/images/blank_star.png" width="20" />
+                        <img class="@("stars" + group.ToString())" name="star5" src="~/images/blank_star.png" width="20" />
                     </div>
+                    <br /><br />
+                    <img src="@url" width="75" />
+                    <h2>@Model.DisplayedProducts[j].Name</h2>
+                    <p>@Model.DisplayedProducts[j].Description</p>
+                    <button class="productbtn" type="button" productId="@Model.DisplayedProducts[j].Id">$@Model.DisplayedProducts[j].Price - Add To Cart</button><br />
                 </td>
+                group++;
+            }
+            @if (group < 3)
+            {
+                @for (int k = 0; k <= 3 - group; k++)
+                {
+                    <td width="33%"></td>
+                }
             }
         </tr>
     }
