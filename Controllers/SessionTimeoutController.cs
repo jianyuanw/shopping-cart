@@ -20,15 +20,16 @@ namespace SA51_CA_Project_Team10.Controllers
         {
             string sessionId = HttpContext.Request.Cookies["sessionId"];
 
-            // Should not be naturally possible to error here, but this safeguards against errors caused by database de-sync during testing
-            if (_db.Sessions.FirstOrDefault(session => session.Id == sessionId) != null)
+            if (sessionId != null)
             {
                 _db.Sessions.Remove(new Session()
                 {
                     Id = sessionId
                 });
                 _db.SaveChanges();
+                
             }
+
 
             HttpContext.Response.Cookies.Delete("sessionId");
 
