@@ -110,7 +110,6 @@ namespace SA51_CA_Project_Team10.Controllers
 
                 HttpContext.Response.Cookies.Append("guestCart", JsonSerializer.Serialize<GuestCart>(guestCart), new CookieOptions
                 {
-                    Secure = true,
                     HttpOnly = true,
                     SameSite = SameSiteMode.Lax
                 });

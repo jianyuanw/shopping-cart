@@ -64,7 +64,6 @@ namespace SA51_CA_Project_Team10.Controllers
 
                 Response.Cookies.Append("sessionId", guid, new CookieOptions
                 {
-                    Secure = true,
                     HttpOnly = true,
                     SameSite = SameSiteMode.Lax
                 });

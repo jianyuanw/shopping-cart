@@ -33,7 +33,6 @@ namespace SA51_CA_Project_Team10.Middlewares
                 // When lastAccessTime is null, it is a new session
                 context.Response.Cookies.Append("lastAccessTime", DateTime.Now.ToString(), new CookieOptions
                 {
-                    Secure = true,
                     HttpOnly = true,
                     SameSite = SameSiteMode.Lax
                 });
@@ -77,7 +76,6 @@ namespace SA51_CA_Project_Team10.Middlewares
                     // if user still activ, keep Update last access time stamp
                     context.Response.Cookies.Append("lastAccessTime", DateTime.Now.ToString(), new CookieOptions
                     {
-                        Secure = true,
                         HttpOnly = true,
                         SameSite = SameSiteMode.Lax
                     });
