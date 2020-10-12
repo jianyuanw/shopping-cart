@@ -135,7 +135,7 @@ namespace SA51_CA_Project_Team10.Controllers
                     {
                         product.Quantity = quantity;
                     }
-                    priceSum += _db.Products.FirstOrDefault(product => product.Id == productId).Price * product.Quantity;
+                    priceSum += _db.Products.FirstOrDefault(product => product.Id == product.Id).Price * product.Quantity;
                 }
                 HttpContext.Response.Cookies.Append("guestCart", JsonSerializer.Serialize<GuestCart>(guestCart));
 
