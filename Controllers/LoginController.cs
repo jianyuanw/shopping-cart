@@ -33,11 +33,11 @@ namespace SA51_CA_Project_Team10.Controllers
                 if (cartCookie != null)
                 {
                     GuestCart guestCart = JsonSerializer.Deserialize<GuestCart>(cartCookie);
-                    ViewData["cart_quantity"] = guestCart.Count();
+                    ViewData["CartQuantity"] = guestCart.Count();
                 }
                 else
                 {
-                    ViewData["cart_quantity"] = 0;
+                    ViewData["CartQuantity"] = 0;
                 }
             }
             return View();

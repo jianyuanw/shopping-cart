@@ -35,7 +35,7 @@
 <div style="text-align:center">
     <form class="inlinef" action="/Gallery/Index" method="get">
         <input type="number" name="page" value="1" hidden />
-        <input style="font-size:30px" size="35" type="text"  id="searchbar" name="search" value="@ViewData["searchbar"]" placeholder="Search.." />
+        <input style="font-size:30px" size="35" type="text"  id="searchbar" name="search" value="@ViewData["Searchbar"]" placeholder="Search.." />
         <button style="font-size:30px; float:right;" type="submit">Go</button>
     </form>
 </div>
@@ -85,7 +85,7 @@
         @if (Model.Page != 1)
         {
             <form class="inlinef" action="/Gallery/Index" method="get">
-                <input type="text" name="search" value="@ViewData["searchbar"]" hidden />
+                <input type="text" name="search" value="@ViewData["Searchbar"]" hidden />
                 <button type="submit" name="page" value="@(Model.Page - 1)">&lt&lt</button>
             </form>
         }
@@ -98,7 +98,7 @@
             else
             {
                 <form class="inlinef" action="/Gallery/Index" method="get">
-                    <input type="text" name="search" value="@ViewData["searchbar"]" hidden />
+                    <input type="text" name="search" value="@ViewData["Searchbar"]" hidden />
                     <button type="submit" class="nonactivePage" name="page" value="@i">@i</button>
                 </form>
             }
@@ -106,7 +106,7 @@
         @if (Model.Page < Model.TotalPage)
         {
             <form class="inlinef" action="/Gallery/Index" method="get">
-                <input type="text" name="search" value="@ViewData["searchbar"]" hidden />
+                <input type="text" name="search" value="@ViewData["Searchbar"]" hidden />
                 <button type="submit" name="page" value="@(Model.Page + 1)">&gt&gt</button>
             </form>
         }

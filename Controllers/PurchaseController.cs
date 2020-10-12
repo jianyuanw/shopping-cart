@@ -59,12 +59,12 @@ namespace SA51_CA_Project_Team10.Controllers
 
                 if (purchases.ToList().Count == 0) // If no purchases, send info to View to display "no past purchases"
                 {
-                    ViewData["havePastOrders"] = false;
+                    ViewData["HavePastOrders"] = false;
 
                     return View();
                 }
 
-                ViewData["havePastOrders"] = true;
+                ViewData["HavePastOrders"] = true;
 
                 return View(purchases.ToList());
             }

@@ -36,18 +36,18 @@ namespace SA51_CA_Project_Team10.Controllers
 
                 //retrieve product number labeled beside icon
                 List<Cart> carts = _db.Carts.Where(x => x.UserId == user.Id).ToList();
-                ViewData["cart_quantity"] = carts.Sum(cart => cart.Quantity);
+                ViewData["CartQuantity"] = carts.Sum(cart => cart.Quantity);
             }      
             else{  
                 //tentative cart
                 string cartCookie = HttpContext.Request.Cookies["guestCart"];
                 if (cartCookie == null)
                 {
-                    ViewData["cart_quantity"] = 0;
+                    ViewData["CartQuantity"] = 0;
                 }
                 else {
                     var guestCart = JsonSerializer.Deserialize<GuestCart>(HttpContext.Request.Cookies["guestCart"]);
-                    ViewData["cart_quantity"] = guestCart.Count();
+                    ViewData["CartQuantity"] = guestCart.Count();
                 }
             }
 
@@ -64,16 +64,18 @@ namespace SA51_CA_Project_Team10.Controllers
 
             var galleryView = new GalleryViewModel(user, page, products);
 
-            ViewData["searchbar"] = search;
+            ViewData["Searchbar"] = search;
 
             return View(galleryView);
         }
 
         [HttpPost]
         public IActionResult AddCart(int productId) {
-            if (_v.VerifySession(HttpContext.Request.Cookies["sessionId"], _db))
+            string sessionId = HttpContext.Request.Cookies["sessionId"];
+
+            if (_v.VerifySession(sessionId, _db))
             {
-                int userid = _db.Sessions.Where(x => x.Id == HttpContext.Request.Cookies["sessionId"]).ToList()[0].UserId;
+                int userid = _db.Sessions.FirstOrDefault(x => x.Id == sessionId).UserId;
                 List<Cart> cart = _db.Carts.Where(x => x.UserId == userid && x.ProductId == productId).ToList();
                 if (cart.Count == 0)
                 {
