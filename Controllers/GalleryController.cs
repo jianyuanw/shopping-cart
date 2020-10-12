@@ -93,12 +93,13 @@ namespace SA51_CA_Project_Team10.Controllers
                 {
                     success = true
                 });
-            }
-            else {
+            } else 
+            {
+                string cartCookie = HttpContext.Request.Cookies["guestCart"];
                 GuestCart guestCart;
-                if (HttpContext.Request.Cookies["guestCart"] != null)
+                if (cartCookie != null)
                 {
-                    guestCart = JsonSerializer.Deserialize<GuestCart>(HttpContext.Request.Cookies["guestCart"]);
+                    guestCart = JsonSerializer.Deserialize<GuestCart>(cartCookie);
                 }
                 else
                 {
@@ -132,7 +133,7 @@ namespace SA51_CA_Project_Team10.Controllers
                 return Json(new
                 {
                     success = true,
-                    newAverage = _db.Products.FirstOrDefault(product => product.Id == productId).Ratings.Average(rating => rating.Score)
+                    newAverage = _db.Ratings.Where(rating => rating.ProductId == productId).Average(rating => rating.Score)
                 });
             }
             else

@@ -42,7 +42,7 @@ namespace SA51_CA_Project_Team10.Controllers
                 if (cartCookie != null)
                 {
                     var guestCart = JsonSerializer.Deserialize<GuestCart>(HttpContext.Request.Cookies["guestCart"]);
-                    carts = guestCart.Products;
+                    carts = guestCart.LoadProducts(_db);
                 }
             }
 

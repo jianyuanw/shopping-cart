@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SA51_CA_Project_Team10.DBs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,7 +29,6 @@ namespace SA51_CA_Project_Team10.Models
             {
                 Id = 0,
                 ProductId = productId,
-                Product = product,
                 Quantity = 1,
                 UserId = 0
             });
@@ -42,6 +42,23 @@ namespace SA51_CA_Project_Team10.Models
                 sum += item.Quantity;
             }
             return sum;
+        }
+
+        public List<Cart> LoadProducts(DbT10Software db)
+        {
+            List<Cart> loadedCart = new List<Cart>();
+            foreach (var item in Products)
+            {
+                loadedCart.Add(new Cart
+                {
+                    Id = 0,
+                    ProductId = item.ProductId,
+                    Product = db.Products.FirstOrDefault(product => product.Id == item.ProductId),
+                    Quantity = item.Quantity,
+                    UserId = 0
+                });
+            }
+            return loadedCart;
         }
     }
 }
