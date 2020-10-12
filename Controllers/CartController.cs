@@ -180,7 +180,7 @@ namespace SA51_CA_Project_Team10.Controllers
                         productToRemove = product;
                         continue;
                     }
-                    priceSum += _db.Products.FirstOrDefault(product => product.Id == productId).Price * product.Quantity;
+                    priceSum += _db.Products.FirstOrDefault(p => p.Id == product.ProductId).Price * product.Quantity;
                 }
                 if (productToRemove != null)
                 {
