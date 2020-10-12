@@ -34,6 +34,8 @@ function ratingStars(event) {
     if (stars === null || stars === '0') {
         let data = event.target.getAttribute("name");
         stars = data.slice(-1);
+    } else {
+        event.target.removeAttribute("style");
     }
 
     stars = parseInt(stars);
