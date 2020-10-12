@@ -140,7 +140,7 @@ namespace SA51_CA_Project_Team10.Controllers
                 return Json(new
                 {
                     success = true,
-                    newAverage = _db.Ratings.Where(rating => rating.ProductId == productId).Average(rating => rating.Score)
+                    newAverage = Math.Round(_db.Ratings.Where(rating => rating.ProductId == productId).Average(rating => rating.Score) * 2) / 2
                 });
             }
             else
