@@ -17,7 +17,6 @@ function updateProduct(event) {
 
     if (cartItem.value === '') {
         cartItem.value = 1;
-        return;
     }
 
     let cartId = cartItem.getAttribute("id");
