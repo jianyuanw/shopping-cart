@@ -25,7 +25,6 @@
     .bdiv {
         bottom: 5px;
         position: absolute;
-        margin-left: 25%;
     }
 </style>
 
@@ -59,7 +58,7 @@
                     <h2>@Model.DisplayedProducts[j].Name</h2>
                     <p>@Model.DisplayedProducts[j].Description</p>
                     <br /><br />
-                    <div class="bdiv">
+                    <div class="bdiv w-100">
                         <button class="productbtn" type="button" productId="@Model.DisplayedProducts[j].Id">$@Model.DisplayedProducts[j].Price - Add To Cart</button>
                     </div>
                 </td>
