@@ -26,6 +26,10 @@
         bottom: 5px;
         position: absolute;
     }
+
+    .productbtn {
+        background-color: white;
+    }
 </style>
 
 <div style="text-align:center">
@@ -59,7 +63,7 @@
                     <p>@Model.DisplayedProducts[j].Description</p>
                     <br /><br />
                     <div class="bdiv w-100">
-                        <button class="productbtn" type="button" productId="@Model.DisplayedProducts[j].Id">$@Model.DisplayedProducts[j].Price - Add To Cart</button>
+                        <button class="productbtn btn btn-outline-dark" type="button" productId="@Model.DisplayedProducts[j].Id">$@Model.DisplayedProducts[j].Price - Add To Cart</button>
                     </div>
                 </td>
                 group++;
