@@ -96,7 +96,6 @@ function highlightStars(elements, stars) {
         }
 
         if (currentStar <= stars) {
-            console.log(elements[i].getAttribute("src").replace("blank", "full"));
             elements[i].src = elements[i].getAttribute("src").replace("blank", "full");
         } else if (currentStar === stars + 1 && half === '5') {
             elements[i].src = elements[i].getAttribute("src").replace("blank", "half");

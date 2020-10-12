@@ -42,11 +42,11 @@
                 <td class="galleryTtd celldiv" style="border: 2px solid black" width="33%">     
                     <div id=@("urdiv" + Model.DisplayedProducts[j].Id) class="urdiv" data-product="@Model.DisplayedProducts[j].Id" data-average="@Model.AverageRating(Model.DisplayedProducts[j].Id)" data-rated="@Model.UserRating(Model.DisplayedProducts[j].Id)">
                         <span id="@("rating" + Model.DisplayedProducts[j].Id)">Average rating:</span>
-                        <img class="@("stars" + group.ToString())" name="star1" src="~/images/blank_star.png" width="20" />
-                        <img class="@("stars" + group.ToString())" name="star2" src="~/images/blank_star.png" width="20" />
-                        <img class="@("stars" + group.ToString())" name="star3" src="~/images/blank_star.png" width="20" />
-                        <img class="@("stars" + group.ToString())" name="star4" src="~/images/blank_star.png" width="20" />
-                        <img class="@("stars" + group.ToString())" name="star5" src="~/images/blank_star.png" width="20" />
+                        <img class="@("stars" + group.ToString())" style="cursor: pointer;" name="star1" src="~/images/blank_star.png" width="20" />
+                        <img class="@("stars" + group.ToString())" style="cursor: pointer;" name="star2" src="~/images/blank_star.png" width="20" />
+                        <img class="@("stars" + group.ToString())" style="cursor: pointer;" name="star3" src="~/images/blank_star.png" width="20" />
+                        <img class="@("stars" + group.ToString())" style="cursor: pointer;" name="star4" src="~/images/blank_star.png" width="20" />
+                        <img class="@("stars" + group.ToString())" style="cursor: pointer;" name="star5" src="~/images/blank_star.png" width="20" />
                     </div>
                     <br /><br />
                     <img src="@url" width="75" />
