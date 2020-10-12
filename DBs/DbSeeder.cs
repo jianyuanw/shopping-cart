@@ -26,10 +26,13 @@ namespace SA51_CA_Project_Team10.DBs
             CreateCarts();
             CreateOrders(10);
             CreateRatings(100);
+            CreateCleanUser("cherwah");
         }
 
         private void CreateUsers()
         {
+            // Every user has the same login and password information for seeding and testing
+            // Example - Username: angelia  Password: angelia
             string[] users = { "angelia", "derek", "jianyuan", "site", "yitong", "yubo", "zifeng" };
             foreach (string user in users)
             {
@@ -41,6 +44,19 @@ namespace SA51_CA_Project_Team10.DBs
                     Password = GenerateHashString(user, salt)
                 });
             }
+            _db.SaveChanges();
+        }
+
+        private void CreateCleanUser(string user)
+        {
+            // Clean user seeding to simulate fresh account
+            byte[] salt = GenerateSalt();
+            _db.Add(new User
+            {
+                Username = user,
+                Salt = Convert.ToBase64String(salt),
+                Password = GenerateHashString(user, salt)
+            });
             _db.SaveChanges();
         }
 
@@ -100,6 +116,7 @@ namespace SA51_CA_Project_Team10.DBs
 
         private void CreateCarts()
         {
+            // Randomly seeds and generates carts for all initial users (non-clean)
             List<User> users = _db.Users.ToList();
             Random r = new Random();
             List<Product> products = _db.Products.ToList();
@@ -127,6 +144,7 @@ namespace SA51_CA_Project_Team10.DBs
 
         private void CreateOrders(int orders)
         {
+            // Randomly seeds and generates orders for all initial users (non-clean)
             List<User> users = _db.Users.ToList();
             List<Product> products = _db.Products.ToList();
 
@@ -206,11 +224,16 @@ namespace SA51_CA_Project_Team10.DBs
             
             for (int i = 0; i < numOfRatingsToGenerate; i++)
             {
-                Rating rating = new Rating
+                Rating rating = null;
+                // Limit one rating per account per product to simulate actual usage which does not allow more than one rating on a product
+                while (rating == null || _db.Ratings.FirstOrDefault(x => x.UserId == rating.UserId && x.ProductId == rating.ProductId) != null)
                 {
-                    Score = r.Next(1, 6),
-                    UserId = r.Next(1, numOfUsers + 1),
-                    ProductId = r.Next(1, numOfProducts + 1)
+                    rating = new Rating
+                    {
+                        Score = r.Next(1, 6),
+                        UserId = r.Next(1, numOfUsers + 1),
+                        ProductId = r.Next(1, numOfProducts + 1)
+                    };
                 };
 
                 _db.Ratings.Add(rating);
