@@ -90,11 +90,11 @@ function highlightStars(elements, stars) {
 
 
         if (currentStar <= stars) {
-            elements[i].src = elements[i].getAttribute("src").replace("blank", "full").replace("half", "full");
+            elements[i].src = "/images/full_star.png";
         } else if (currentStar === stars + 1 && half === '5') {
-            elements[i].src = elements[i].getAttribute("src").replace("blank", "half").replace("full", "half");
+            elements[i].src = "/images/half_star.png";
         } else {
-            elements[i].src = elements[i].getAttribute("src").replace("full", "blank").replace("half", "blank");
+            elements[i].src = "/images/blank_star.png";
         }
     }
 }
