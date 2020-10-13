@@ -31,11 +31,14 @@ function onclick(event) {
             // receives response from server
             if (this.status == 200) {
                 let data = JSON.parse(this.responseText);
-                if (data.success === true)
-                {
+                if (data.success === true) {
                     let cartelem = document.getElementById('cartnum');
                     let num = cartelem.innerHTML;
                     cartelem.innerHTML = parseInt(num) + 1;
+                } else {
+                    // Reloads to parse the alert during failure
+                    window.location.reload();
+                    return false;
                 }
             }
         }

@@ -44,6 +44,18 @@ namespace SA51_CA_Project_Team10.Models
             return sum;
         }
 
+        public Cart Find(int productId)
+        {
+            foreach (var cart in Products)
+            {
+                if (cart.ProductId == productId)
+                {
+                    return cart;
+                }
+            }
+            return null;
+        }
+
         public List<Cart> LoadProducts(DbT10Software db)
         {
             List<Cart> loadedCart = new List<Cart>();
