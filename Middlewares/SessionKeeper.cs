@@ -43,7 +43,7 @@ namespace SA51_CA_Project_Team10.Middlewares
                 DateTime lastAccessDateTime = Convert.ToDateTime(lastAccess);
 
                 // If now is more than 20 mins from lastAccessTime
-                if (DateTime.Now.CompareTo(lastAccessDateTime.AddMinutes(0.1)) == 1)
+                if (DateTime.Now.CompareTo(lastAccessDateTime.AddMinutes(20)) == 1)
                 {
                     //if user not active, remove the last accesstime and redirect to session timeout controller
                     //controller will clean up session and redirect to gallery page with session timeout message
