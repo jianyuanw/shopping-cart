@@ -51,7 +51,7 @@ namespace SA51_CA_Project_Team10.Controllers
                 // Returns alternate view if there are no items
                 ViewData["CartQuantity"] = 0;
                 ViewData["Total"] = 0;
-                return View("NoItemCart");
+                carts = null;
             } else
             {
                 ViewData["CartQuantity"] = carts.Sum(cart => cart.Quantity);

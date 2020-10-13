@@ -76,8 +76,8 @@ namespace SA51_CA_Project_Team10.Controllers
             if (_v.VerifySession(sessionId, _db))
             {
                 int userid = _db.Sessions.FirstOrDefault(x => x.Id == sessionId).UserId;
-                List<Cart> cart = _db.Carts.Where(x => x.UserId == userid && x.ProductId == productId).ToList();
-                if (cart.Count == 0)
+                Cart cart = _db.Carts.FirstOrDefault(x => x.UserId == userid && x.ProductId == productId);
+                if (cart == null)
                 {
                     _db.Add(new Cart()
                     {
@@ -88,7 +88,7 @@ namespace SA51_CA_Project_Team10.Controllers
                 }
                 else
                 {
-                    cart[0].Quantity += 1;
+                    cart.Quantity += 1;
                 }
                 _db.SaveChanges();
 
@@ -131,12 +131,14 @@ namespace SA51_CA_Project_Team10.Controllers
             if (_v.VerifySession(sessionId, _db))
             {
                 User user = _db.Sessions.FirstOrDefault(session => session.Id == sessionId).User;
+
                 _db.Ratings.Add(new Rating
                 {
                     UserId = user.Id,
                     ProductId = productId,
                     Score = rating
                 });
+
                 _db.SaveChanges();
 
                 return Json(new

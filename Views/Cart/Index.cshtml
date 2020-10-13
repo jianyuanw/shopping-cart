@@ -9,30 +9,52 @@
     <script src="~/js/cart.js"></script>
 }
 
-<table id="cartTable" class="gallery" style="border-spacing: 20px 20px; border-collapse: separate;" border="0">
-    @foreach (Cart c in Model)
-    {
-        <tr id=@("row" + row)>
-            <td style="border:2px solid black;" width="50%">
-                <img src="@c.Product.ImageLink.TrimStart('~')" />
-                <p>@c.Product.Name</p>
-                <p>@c.Product.Description</p>
-            </td>
-            <td>
-                <table>
-                    <tr>
-                        <td class="p-1 font-weight-bold text-right">Unit Price:</td>
-                        <td class="p-1 text-left" id="@("price" + c.ProductId)">@("$" + (c.Product.Price).ToString())</td>
-                    </tr>
-                    <tr>
-                        <td class="p-1 font-weight-bold text-right">Quantity:</td>
-                        <td class="p-1">
-                            <input id="@("quantity" + c.ProductId)" class="productQuantity" type="number" min="1" value="@c.Quantity" style="width: 55px;" required /><input type="image" id="@("remove" + c.ProductId)" class="productRemove" data-row="@row" src="~/images/trash_white.png" width="25">
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        row++;
-    }
-</table>
+@if (Model != null)
+{
+    <table id="cartTable" class="gallery" style="border-spacing: 20px 20px; border-collapse: separate;" border="0">
+        @foreach (Cart c in Model)
+        {
+            <tr id=@("row" + row)>
+                <td style="border:2px solid black;" width="50%">
+                    <img src="@c.Product.ImageLink.TrimStart('~')" />
+                    <p>@c.Product.Name</p>
+                    <p>@c.Product.Description</p>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td class="p-1 font-weight-bold text-right">Unit Price:</td>
+                            <td class="p-1 text-left" id="@("price" + c.ProductId)">@("$" + (c.Product.Price).ToString())</td>
+                        </tr>
+                        <tr>
+                            <td class="p-1 font-weight-bold text-right">Quantity:</td>
+                            <td class="p-1">
+                                <input id="@("quantity" + c.ProductId)" class="productQuantity" type="number" min="1" value="@c.Quantity" style="width: 55px;" required /><input type="image" id="@("remove" + c.ProductId)" class="productRemove" data-row="@row" src="~/images/trash_white.png" width="25">
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            row++;
+        }
+    </table>
+} else 
+{
+    <style>
+        .center_div {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+        }
+
+        .no_item_cart_description {
+            font-size: 26pt;
+            color: darkgrey;
+        }
+    </style>
+
+    <div class="center_div">
+        <p class="no_item_cart_description">No item in cart!</p>
+    </div>
+}

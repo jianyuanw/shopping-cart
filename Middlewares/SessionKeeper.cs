@@ -48,7 +48,7 @@ namespace SA51_CA_Project_Team10.Middlewares
                     //if user not active, remove the last accesstime and redirect to session timeout controller
                     //controller will clean up session and redirect to gallery page with session timeout message
                     context.Response.Cookies.Delete("lastAccessTime");
-                    context.Response.Redirect("/Gallery/Index");
+                    
 
                     string sessionId = context.Request.Cookies["sessionId"];
 
@@ -69,7 +69,7 @@ namespace SA51_CA_Project_Team10.Middlewares
                     ITempDataDictionary TempData = factory.GetTempData(context);
                     TempData["Alert"] = "warning|Your session has timed-out!";
 
-                    return;
+                    context.Response.Redirect("/Gallery/Index");
                 } 
                 else
                 {

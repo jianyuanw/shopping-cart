@@ -54,13 +54,26 @@ namespace SA51_CA_Project_Team10.Controllers
             } else
             {
                 // Create and store session
-                string guid = Guid.NewGuid().ToString();
-                _db.Sessions.Add(new Session
+                string guid = null;
+
+                Session session = _db.Sessions.FirstOrDefault(session => session.UserId == user.Id);
+
+                // Gives user the same session back if a session is already detected but updates timestamp
+                if (session == null)
                 {
-                    Id = guid,
-                    UserId = user.Id,
-                    TimeStamp = DateTime.Now
-                });
+                    guid = Guid.NewGuid().ToString();
+                    _db.Sessions.Add(new Session
+                    {
+                        Id = guid,
+                        UserId = user.Id,
+                        TimeStamp = DateTime.Now
+                    });
+                } else
+                {
+                    guid = session.Id;
+                    session.TimeStamp = DateTime.Now;
+                }
+
                 _db.SaveChanges();
 
                 Response.Cookies.Append("sessionId", guid, new CookieOptions

@@ -54,6 +54,7 @@ function averageStars(event) {
 
 function newStar(event) {
     let myClass = event.target.getAttribute("class");
+    // Checks to ensure that the user has highlighted one of the stars, as opposed to other parts of urdiv
     if (myClass == null || !myClass.startsWith("stars")) {
         return;
     }

@@ -78,5 +78,21 @@
 }
 else
 {
-    <h4>You have no past purchases.</h4>
+    <style>
+        .center_div {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+        }
+
+        .no_item_cart_description {
+            font-size: 26pt;
+            color: darkgrey;
+        }
+    </style>
+
+    <div class="center_div">
+        <p class="no_item_cart_description">You have no past purchases.</p>
+    </div>
 }
