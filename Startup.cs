@@ -34,11 +34,8 @@ namespace SA51_CA_Project_Team10
                     ));
 
             services.AddSingleton<Hasher>();
+
             services.AddSingleton<Verify>();
-            services.AddSession(opts =>
-            {
-                opts.Cookie.IsEssential = true; // make the session cookie Essential
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,8 +55,6 @@ namespace SA51_CA_Project_Team10
 
             app.UseAuthorization();
 
-            //app.UseSession();
-
             app.UseMiddleware<SessionKeeper>();
 
             app.UseEndpoints(endpoints =>
@@ -69,10 +64,11 @@ namespace SA51_CA_Project_Team10
                     pattern: "{controller=Gallery}/{action=Index}/{id?}");
             });
 
-            db.Database.EnsureDeleted(); // Comment this line away if you don't want to restart the database every time
+            // Comment next line away if you don't want to restart the database every time
+            db.Database.EnsureDeleted(); 
 
             db.Database.EnsureCreated();
-
+            // Comment next line away to not reseed database
             new DbSeeder(db).Seed();
         }
     }
