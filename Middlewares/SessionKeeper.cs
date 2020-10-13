@@ -22,7 +22,7 @@ namespace SA51_CA_Project_Team10.Middlewares
             
         }
 
-        public async Task Invoke(HttpContext context, ITempDataDictionaryFactory factory, DbT10Software db)
+        public async Task Invoke(HttpContext context, ITempDataProvider tdp, DbT10Software db)
         {
             // check and get exisiting user lastaccesstime
             string lastAccess = context.Request.Cookies["lastAccessTime"];
@@ -43,12 +43,11 @@ namespace SA51_CA_Project_Team10.Middlewares
                 DateTime lastAccessDateTime = Convert.ToDateTime(lastAccess);
 
                 // If now is more than 20 mins from lastAccessTime
-                if (DateTime.Now.CompareTo(lastAccessDateTime.AddMinutes(20)) == 1)
+                if (DateTime.Now.CompareTo(lastAccessDateTime.AddMinutes(0.1)) == 1)
                 {
                     //if user not active, remove the last accesstime and redirect to session timeout controller
                     //controller will clean up session and redirect to gallery page with session timeout message
                     context.Response.Cookies.Delete("lastAccessTime");
-                    
 
                     string sessionId = context.Request.Cookies["sessionId"];
 
@@ -65,15 +64,16 @@ namespace SA51_CA_Project_Team10.Middlewares
 
                     context.Response.Cookies.Delete("sessionId");
 
-                    // Uses injected TempData factory to fetch TempData from context before inserting text
-                    ITempDataDictionary TempData = factory.GetTempData(context);
-                    TempData["Alert"] = "warning|Your session has timed-out!";
+                    // Uses injected TempDataProvider to add TempData into context without controller
+                    tdp.SaveTempData(context, new Dictionary<string, object> { ["Alert"] = "warning|Your session has timed-out!" });
 
                     context.Response.Redirect("/Gallery/Index");
+
+                    return;
                 } 
                 else
                 {
-                    // if user still activ, keep Update last access time stamp
+                    // if user still active, keep Update last access time stamp
                     context.Response.Cookies.Append("lastAccessTime", DateTime.Now.ToString(), new CookieOptions
                     {
                         HttpOnly = true,
