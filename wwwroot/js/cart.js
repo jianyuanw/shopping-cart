@@ -17,6 +17,8 @@ function updateProduct(event) {
 
     if (cartItem.value === '' || cartItem.value <= 0) {
         cartItem.value = 1;
+    } else if (cartItem.value > 100) {
+        cartItem.value = 100;
     }
 
     let cartId = cartItem.getAttribute("id");
@@ -31,6 +33,7 @@ function removeProduct(event) {
     let cartId = cartItem.getAttribute("id");
     let productId = parseInt(cartId.substring(cartId.indexOf("remove") + 6));
     let row = cartItem.getAttribute("data-row");
+
     ajaxRequestRemove(productId, row);
 }
 

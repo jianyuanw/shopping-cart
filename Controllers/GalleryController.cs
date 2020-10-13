@@ -77,6 +77,8 @@ namespace SA51_CA_Project_Team10.Controllers
             {
                 int userid = _db.Sessions.FirstOrDefault(x => x.Id == sessionId).UserId;
                 Cart cart = _db.Carts.FirstOrDefault(x => x.UserId == userid && x.ProductId == productId);
+
+                // Special case handling to prevent integer overflow
                 if (cart == null)
                 {
                     _db.Add(new Cart()
@@ -86,10 +88,18 @@ namespace SA51_CA_Project_Team10.Controllers
                         ProductId = productId
                     });
                 }
-                else
+                else if (cart.Quantity < 100)
                 {
                     cart.Quantity += 1;
+                } else
+                {
+                    TempData["Alert"] = "warning|Cannot have more than 100 of the same product at once in cart, please contact Team 10 for bulk purchases.";
+                    return Json(new
+                    {
+                        success = false,
+                    });
                 }
+
                 _db.SaveChanges();
 
                 return Json(new
@@ -107,8 +117,24 @@ namespace SA51_CA_Project_Team10.Controllers
                 else
                 {
                     guestCart = new GuestCart();
+                    guestCart.Add(productId, _db.Products.FirstOrDefault(p => p.Id == productId));
                 }
-                guestCart.Add(productId, _db.Products.FirstOrDefault(p => p.Id == productId));
+
+                Product product = _db.Products.FirstOrDefault(p => p.Id == productId);
+                Cart inCart = guestCart.Find(productId);
+
+                // Special case handling to prevent integer overflow
+                if (inCart == null || inCart.Quantity < 100)
+                {
+                    guestCart.Add(productId, product);
+                } else
+                {
+                    TempData["Alert"] = "warning|Cannot have more than 100 of the same product at once in cart, please contact Team 10 for bulk purchases.";
+                    return Json(new
+                    {
+                        success = false,
+                    });
+                }
 
                 HttpContext.Response.Cookies.Append("guestCart", JsonSerializer.Serialize<GuestCart>(guestCart), new CookieOptions
                 {
