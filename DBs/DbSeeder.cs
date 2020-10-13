@@ -25,7 +25,7 @@ namespace SA51_CA_Project_Team10.DBs
             CreateProducts();
             CreateCarts();
             CreateOrders(10);
-            CreateRatings(100);
+            CreateRatings(50);
             CreateCleanUser("cherwah");
         }
 
@@ -237,9 +237,8 @@ namespace SA51_CA_Project_Team10.DBs
                 };
 
                 _db.Ratings.Add(rating);
+                _db.SaveChanges();
             }
-
-            _db.SaveChanges();
         }
     }
 }
